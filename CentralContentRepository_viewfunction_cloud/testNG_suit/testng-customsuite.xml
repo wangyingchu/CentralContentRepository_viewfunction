@@ -1,0 +1,57 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="CentralContentRepository_viewfunction full test suite">
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_FactoryTestCase">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_FactoryTestCase"/>
+    </classes>
+  </test>
+  
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentSpaceTestCase">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentSpaceTestCase"/>
+    </classes>
+  </test>
+  
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_RootContentObjectTestCase">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_RootContentObjectTestCase"/>
+    </classes>
+  </test>
+  
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentObjectTestCase">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentObjectTestCase"/>
+    </classes>
+  </test>
+  
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_VersionObjectTestCase">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_VersionObjectTestCase"/>
+    </classes>
+  </test>
+
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentOperationHelperTestCase">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentOperationHelperTestCase"/>
+    </classes>
+  </test>
+  
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_ObjectCollectionHelperTestCase">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_ObjectCollectionHelperTestCase"/>
+    </classes>
+  </test>
+  
+    <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentQueryHelperTestCase">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentQueryHelperTestCase"/>
+    </classes>
+  </test>  
+  <!--
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_SecurityOperationHelperTestCase">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_SecurityOperationHelperTestCase"/>
+    </classes>
+  </test> 
+  --> 
+</suite>

@@ -1,0 +1,88 @@
+Filenet CE core Interface Summary
+Annotation	Represents an annotation that can be applied to a document, folder, or custom object.
+BatchItemHandle	References objects for batch operations.
+ComponentRelationship	Defines a hierarchical relationship between two documents as components in a compound document.
+Connection	Represents a logical connection to a FileNet P8 domain.
+Containable	Represents the base class for all objects that can be contained.
+ContainmentRelationship	Models containment relationships.
+ContentElement	Represents the superclass for classes used to access document or annotation content data.
+ContentReference	Represents external content data that exists outside of an object store (and therefore outside the control of the Content Engine server), but to which an object store 
+
+maintains a reference.
+ContentTransfer	Represents content data that is local to an object store and directly managed by the Content Engine server.
+CustomObject	Represents a general interface that can be subclassed.
+DependentObject	Indicates objects that are dependent.
+Document	Represents a single version of a document stored in an object store.
+Domain	Represents a collection of resources and services sharing the same Global Configuration Database (GCD).
+DynamicReferentialContainmentRelationship	Represents a dynamic relationship between two Containable subclasses: a container and the current version of a Document.
+EngineObject	Represents the top-level interface from which most of the other Content Engine API interfaces derive.
+EntireNetwork	Represents the highest-level object in the Content Engine API object model.
+Folder	Represents a container that can hold other Containable subclasses, but cannot have content data of its own.
+IndependentlyPersistableObject	Represents a persistable IndependentObject that you can directly create, update, and delete.
+IndependentObject	Indicates objects that are independent.
+InstantiatingScope	Provides a generic means for instantiating independent objects within a scope.
+Link	Represents a relationship between two objects.
+ObjectReference	Provides a means to retrieve identity information about an object.
+ObjectStore	Represents a location in which folders, documents, and custom objects are stored, accessed, and managed on the Content Engine server.
+ReferentialContainmentRelationship	Represents a static relationship between two Containable subclasses: a container and a containee.
+Relationship	Represents the base class for binary relationships between independently persistable objects of an object store.
+RepositoryObject	Indicates objects that are repository objects.
+Scope	Defines the originating "scope" (enclosing context) of an object, such as the Domain of a Site or ObjectStore, or the ObjectStore of a Document.
+Subscribable	Serves as a target of an event subscription, represented by a Subscription-based object.
+Versionable	Represents the base class for classes whose instances are versionable objects.
+VersionSeries	Represents the complete set of versions for a versionable object, or document (that is, an object instantiated from a subinterface of the Versionable interface).
+WorkflowDefinition	Represents a workflow definition, an XML document of class "WorkflowDefinition" that is stored in a Content Engine object store.
+
+Filenet CE action Interface Summary Class Summary
+ApplySecurityTemplate	Represents an ¡°apply security template¡± pending action.
+ChangeClass	Represents a pending action for changing the class of a Content Engine object.
+ChangeState	Represents a pending action for changing the lifecycle policy state of a document.
+Checkin	Represents a pending action for checking in a document as a new version.
+Checkout	Represents a pending action for checking out a document.
+Create	Represents a ¡°create¡± pending action.
+Delete	Represents a ¡°delete¡± pending action.
+DemoteVersion	Represents a pending action for demoting a major version of a document to a minor version.
+Freeze	Represents a pending action for freezing the custom properties of a document version.
+InstallAddOn	Represents a pending action for installing an add-on.
+Lock	Represents a ¡°lock¡± pending action.
+MoveContent	Represents a pending action for moving the content data of an object to a new storage location.
+PendingAction	Provides the base class for all of the other classes in this package.
+PromoteVersion	Represents a pending action for promoting a minor version of a document to a major version.
+RaiseEvent	Represents a pending action for raising a custom event on a Subscribable object.
+TakeFederatedOwnership	Represents a pending action for giving exclusive control of the modification or deletion of a document's federated content to the Content Engine.
+Unlock	Represents an ¡°unlock¡± pending action.
+Update	Represents an ¡°update¡± pending action.
+=============================================================================================================================================================================
+Object--------------
+Connection	Represents a logical connection to a FileNet P8 domain.                [ContentSpace.session]
+Containable	Represents the base class for all objects that can be contained.       [BaseContentObject]
+Document	Represents a single version of a document stored in an object store.   [BinaryContent]
+Domain	Represents a collection of resources and services sharing the same Global Configuration Database (GCD).[?..Reposity]
+Folder	Represents a container that can hold other Containable subclasses, but cannot have content data of its own.[?..BaseContentObject]   Need ? 
+Link	Represents a relationship between two objects.[[BaseContentObject].addSubLinkContentObject]                                                                           
+ObjectReference	Provides a means to retrieve identity information about an object.[[BaseContentObject].Property]
+ObjectStore	Represents a location in which folders, documents, and custom objects are stored, accessed, and managed on the Content Engine server.[ContentSpace]
+Scope	Defines the originating "scope" (enclosing context) of an object, such as the Domain of a Site or ObjectStore, or the ObjectStore of a Document.[ContentObjectInheritanceChain]
+Subscribable	Serves as a target of an event subscription, represented by a Subscription-based object.[event support?]
+Versionable	Represents the base class for classes whose instances are versionable objects.[Version]
+
+
+Action---------------
+Checkin	Represents a pending action for checking in a document as a new version. (Record version parameter)
+Checkout	Represents a pending action for checking out a document.(Imply)
+Create	Represents a ¡°create¡± pending action. (Add ContentObject)
+Delete	Represents a ¡°delete¡± pending action. (Remove ContentObject)
+Freeze	Represents a pending action for freezing the custom properties of a document version.           make some property can not modify.
+Lock	Represents a ¡°lock¡± pending action. (LockObject and lock method)                           
+Unlock	Represents an ¡°unlock¡± pending action.(LockObject and unlock method)
+MoveContent	Represents a pending action for moving the content data of an object to a new storage location.[moveContentObject]
+RaiseEvent	Represents a pending action for raising a custom event on a Subscribable object.[addContentObjectEventListener]
+query [ContentQueryHelper]
+
+TO DO List:
+1.Freeze property
+
+
+current user:
+root viewfunctionroot
+wangychu wangychu

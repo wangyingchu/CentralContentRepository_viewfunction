@@ -1,0 +1,10 @@
+Voici un fichier contenant des caractères spécifiques à la langue française :
+- français
+- où
+- été
+- mère
+- août
+- être
+- à
+- noël
+- naïade
