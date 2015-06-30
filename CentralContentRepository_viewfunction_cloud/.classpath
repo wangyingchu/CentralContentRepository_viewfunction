@@ -2,23 +2,33 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/asm-debug-all-4.1.jar"/>
-	<classpathentry kind="lib" path="lib/aspectjrt-1.8.0.jar"/>
+	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/bcmail-jdk15-1.45.jar"/>
 	<classpathentry kind="lib" path="lib/bcprov-jdk15-1.45.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.9.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-dbcp-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-pool-1.5.4.jar"/>
 	<classpathentry kind="lib" path="lib/concurrent-1.3.4.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/fontbox-1.8.8.jar"/>
 	<classpathentry kind="lib" path="lib/geronimo-stax-api_1.0_spec-1.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/guava-15.0.jar"/>
+	<classpathentry kind="lib" path="lib/jcl-over-slf4j-1.6.4.jar"/>
+	<classpathentry kind="lib" path="lib/jcr-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.6.4.jar"/>
+	<classpathentry kind="lib" path="lib/tagsoup-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/mime-util-2.1.3.jar"/>
 	<classpathentry kind="lib" path="lib/guessencoding-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/shared-all-0.9.18.jar"/>
+	<classpathentry kind="lib" path="lib/ldap-client-api-0.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/juniversalchardet-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-3.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/asm-debug-all-4.1.jar"/>
+	<classpathentry kind="lib" path="lib/aspectjrt-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="lib/fontbox-1.8.8.jar"/>
+	<classpathentry kind="lib" path="lib/guava-15.0.jar"/>
 	<classpathentry kind="lib" path="lib/isoparser-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/jackrabbit-api-2.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/jackrabbit-core-2.10.1.jar"/>
@@ -31,20 +41,24 @@
 	<classpathentry kind="lib" path="lib/jackrabbit-spi-commons-2.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/jackrabbit-webdav-2.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/java-libpst-0.8.1.jar"/>
-	<classpathentry kind="lib" path="lib/jcl-over-slf4j-1.6.4.jar"/>
-	<classpathentry kind="lib" path="lib/jcr-2.0.jar"/>
 	<classpathentry kind="lib" path="lib/jempbox-1.8.8.jar"/>
 	<classpathentry kind="lib" path="lib/jhighlight-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jmatio-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/json-simple-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/juniversalchardet-1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/ldap-client-api-0.1.jar"/>
 	<classpathentry kind="lib" path="lib/logback-classic-1.0.12.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-1.0.12.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-3.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/mapdb-1.0.6.jar"/>
-	<classpathentry kind="lib" path="lib/mime-util-2.1.3.jar"/>
-	<classpathentry kind="lib" path="lib/mongo-java-driver-2.13.2.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-1.8.8.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.11.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-3.11.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.11.jar"/>
+	<classpathentry kind="lib" path="lib/poi-scratchpad-3.11.jar"/>
+	<classpathentry kind="lib" path="lib/tika-core-1.7.jar"/>
+	<classpathentry kind="lib" path="lib/tika-parsers-1.7.jar"/>
+	<classpathentry kind="lib" path="lib/vorbis-java-core-0.6.jar"/>
+	<classpathentry kind="lib" path="lib/vorbis-java-tika-0.6.jar"/>
+	<classpathentry kind="lib" path="lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/xz-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/oak-auth-external-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/oak-auth-ldap-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/oak-authorization-cug-1.2.2.jar"/>
@@ -62,20 +76,6 @@
 	<classpathentry kind="lib" path="lib/oak-solr-osgi-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/oak-tarmk-standby-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/oak-upgrade-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/pdfbox-1.8.8.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.11.jar"/>
-	<classpathentry kind="lib" path="lib/poi-ooxml-3.11.jar"/>
-	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.11.jar"/>
-	<classpathentry kind="lib" path="lib/poi-scratchpad-3.11.jar"/>
-	<classpathentry kind="lib" path="lib/shared-all-0.9.18.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.6.4.jar"/>
-	<classpathentry kind="lib" path="lib/tagsoup-1.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/tika-core-1.7.jar"/>
-	<classpathentry kind="lib" path="lib/tika-parsers-1.7.jar"/>
-	<classpathentry kind="lib" path="lib/vorbis-java-core-0.6.jar"/>
-	<classpathentry kind="lib" path="lib/vorbis-java-tika-0.6.jar"/>
-	<classpathentry kind="lib" path="lib/xmlbeans-2.6.0.jar"/>
-	<classpathentry kind="lib" path="lib/xz-1.5.jar"/>
-	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/mongo-java-driver-2.13.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
