@@ -12,13 +12,12 @@ public class PerportyHandler {
 	private static Properties _properties;		
 	public static String USER_AUTHENTICATION_METHOD="USER_AUTHENTICATION_METHOD";
 	public static String BUILDIN_ADMINISTRATOR_ACCOUNT="BUILDIN_ADMINISTRATOR_ACCOUNT";
-	public static String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD="BUILDIN__ADMINISTRATOR_ACCOUNT_PWD";
+	public static String BUILDIN_ADMINISTRATOR_ACCOUNT_PWD="BUILDIN_ADMINISTRATOR_ACCOUNT_PWD";
 	public static String USER_AUTHENTICATION_LDAP_SERVER_ADDRESS="USER_AUTHENTICATION_LDAP_SERVER_ADDRESS";
 	public static String USER_AUTHENTICATION_LDAP_SERVICE_PORT="USER_AUTHENTICATION_LDAP_SERVICE_PORT";
-	public static String DATA_PERSISTENCE_TYPE="DATA_PERSISTENCE_TYPE";
-	public static String DATA_PERSISTENCE_BUILDIN="BUILDIN";
-	public static String DATA_PERSISTENCE_MYSQL="MYSQL";
-	
+	public static String MONGODB_SERVER_ADDRESS="MONGODB_SERVER_ADDRESS";
+	public static String MONGODB_SERVER_PORT="MONGODB_SERVER_PORT";
+
 	public static String getPerportyValue(String resourceFileName) throws ContentReposityRuntimeException{		
 		_properties=new Properties();
 		try {

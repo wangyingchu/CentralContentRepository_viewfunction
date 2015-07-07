@@ -1,43 +1,26 @@
 package com.viewfunction.contentRepository.util.factory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Credentials;
 import javax.jcr.LoginException;
-import javax.jcr.NamespaceRegistry;
 import javax.jcr.NoSuchWorkspaceException;
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
-import javax.jcr.PropertyType;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 import javax.jcr.Workspace;
-import javax.jcr.nodetype.NodeDefinitionTemplate;
-import javax.jcr.nodetype.NodeType;
-import javax.jcr.nodetype.NodeTypeManager;
-import javax.jcr.nodetype.NodeTypeTemplate;
-import javax.jcr.nodetype.PropertyDefinitionTemplate;
 
-import org.apache.jackrabbit.api.JackrabbitRepository;
-import org.apache.jackrabbit.core.nodetype.NodeTypeManagerImpl;
-import org.apache.jackrabbit.core.TransientRepository;
 import org.apache.jackrabbit.oak.Oak;
 import org.apache.jackrabbit.oak.jcr.Jcr;
 import org.apache.jackrabbit.oak.plugins.document.DocumentMK;
 import org.apache.jackrabbit.oak.plugins.document.DocumentNodeStore;
-import org.apache.jackrabbit.oak.plugins.nodetype.NodeTypeConstants;
-import org.apache.jackrabbit.oak.plugins.nodetype.write.ReadWriteNodeTypeManager;
-import static org.apache.jackrabbit.oak.jcr.repository.RepositoryImpl.REFRESH_INTERVAL;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -60,11 +43,9 @@ import com.viewfunction.contentRepository.contentBureauImpl.JCRRootContentObject
 import com.viewfunction.contentRepository.contentBureauImpl.JCRVersionObjectImpl;
 import com.viewfunction.contentRepository.security.SecurityOperationConstant;
 import com.viewfunction.contentRepository.util.BatchLoadJCRContentObjectImpl;
-import com.viewfunction.contentRepository.util.BatchLoadJCRContentSpaceImpl;
 import com.viewfunction.contentRepository.util.BatchLoadJCRRootContentObjectImpl;
 import com.viewfunction.contentRepository.util.ContentReposityCustomNodesConfigUtil;
 import com.viewfunction.contentRepository.util.PerportyHandler;
-import com.viewfunction.contentRepository.util.RuntimeEnvironmentHandler;
 import com.viewfunction.contentRepository.util.exception.ContentReposityDataException;
 import com.viewfunction.contentRepository.util.exception.ContentReposityException;
 import com.viewfunction.contentRepository.util.exception.ContentReposityRuntimeException;
@@ -96,12 +77,20 @@ public class ContentComponentFactory {
 	private static String BUILDIN_ADMINISTRATOR_ACCOUNT;
 	private static String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD;	
 	private static String USER_AUTHENTICATION_METHOD;
+	private static String MONGODB_SERVER_ADDRESS;
+	private static int MONGODB_SERVER_PORT_INTEGER;
 	
 	private static ContentSpace generateContentSpace(String contentSpaceName,Credentials loginCredentials)throws ContentReposityException{
+		if(MONGODB_SERVER_ADDRESS==null){
+			MONGODB_SERVER_ADDRESS=PerportyHandler.getPerportyValue(PerportyHandler.MONGODB_SERVER_ADDRESS);
+		}
+		if(MONGODB_SERVER_PORT_INTEGER==0){
+			MONGODB_SERVER_PORT_INTEGER=Integer.parseInt(PerportyHandler.getPerportyValue(PerportyHandler.MONGODB_SERVER_PORT));
+		}
 		Session session=null;
 		DocumentNodeStore nodeStore=null;
 		try {
-			DB db = new MongoClient("127.0.0.1", 27017).getDB(contentSpaceName);
+			DB db = new MongoClient(MONGODB_SERVER_ADDRESS, MONGODB_SERVER_PORT_INTEGER).getDB(contentSpaceName);
 	        nodeStore = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
 	        Repository contentRepository = new Jcr(new Oak(nodeStore)).createRepository();
 			session=contentRepository.login(loginCredentials);
@@ -153,7 +142,7 @@ public class ContentComponentFactory {
 			BUILDIN_ADMINISTRATOR_ACCOUNT=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT);
 		}
 		if(BUILDIN__ADMINISTRATOR_ACCOUNT_PWD==null){
-			BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN__ADMINISTRATOR_ACCOUNT_PWD);	
+			BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT_PWD);	
 		}
 		ContentSpace targetContentSpace=connectContentSpace(BUILDIN_ADMINISTRATOR_ACCOUNT,BUILDIN__ADMINISTRATOR_ACCOUNT_PWD,contentSpacePKObj);
 		return targetContentSpace;			
@@ -177,7 +166,7 @@ public class ContentComponentFactory {
 			return null;
 		}
 		String BUILDIN_ADMINISTRATOR_ACCOUNT=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT);
-		String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN__ADMINISTRATOR_ACCOUNT_PWD);
+		String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT_PWD);
 		SimpleCredentials loginCredentials=new SimpleCredentials(BUILDIN_ADMINISTRATOR_ACCOUNT, BUILDIN__ADMINISTRATOR_ACCOUNT_PWD.toCharArray());			
 		if(PerportyHandler.getPerportyValue(PerportyHandler.USER_AUTHENTICATION_METHOD).equals(SecurityOperationConstant.USER_AUTHENTICATION_METHOD_LDAP)){
 			loginCredentials.setAttribute(JCRContentReposityConstant.USER_LOGIN_TIME, new Date());	
@@ -270,16 +259,22 @@ public class ContentComponentFactory {
 	}
 	
 	public static List<String> getRegisteredContentSpace() throws ContentReposityException{
+		if(MONGODB_SERVER_ADDRESS==null){
+			MONGODB_SERVER_ADDRESS=PerportyHandler.getPerportyValue(PerportyHandler.MONGODB_SERVER_ADDRESS);
+		}
+		if(MONGODB_SERVER_PORT_INTEGER==0){
+			MONGODB_SERVER_PORT_INTEGER=Integer.parseInt(PerportyHandler.getPerportyValue(PerportyHandler.MONGODB_SERVER_PORT));
+		}
 		Session session=null;
 		DocumentNodeStore nodeStore=null;
 		try {
 			String metaDataContentSpace=JCRContentReposityConstant.METEDATA_CONTENTSPACE;
-			DB db = new MongoClient("127.0.0.1", 27017).getDB(metaDataContentSpace);
+			DB db = new MongoClient(MONGODB_SERVER_ADDRESS, MONGODB_SERVER_PORT_INTEGER).getDB(metaDataContentSpace);
 	        nodeStore = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
 	        Repository contentRepository  = new Jcr(new Oak(nodeStore)).createRepository();
 			
 			String BUILDIN_ADMINISTRATOR_ACCOUNT=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT);
-			String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN__ADMINISTRATOR_ACCOUNT_PWD);
+			String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT_PWD);
 			SimpleCredentials loginCredentials=new SimpleCredentials(BUILDIN_ADMINISTRATOR_ACCOUNT, BUILDIN__ADMINISTRATOR_ACCOUNT_PWD.toCharArray());
 			if(PerportyHandler.getPerportyValue(PerportyHandler.USER_AUTHENTICATION_METHOD).equals(SecurityOperationConstant.USER_AUTHENTICATION_METHOD_LDAP)){
 				loginCredentials.setAttribute(JCRContentReposityConstant.USER_LOGIN_TIME, new Date());	
@@ -326,17 +321,23 @@ public class ContentComponentFactory {
 	}
 	
 	private static boolean registerContentSpace(String contentSpaceID) throws ContentReposityException{		
+		if(MONGODB_SERVER_ADDRESS==null){
+			MONGODB_SERVER_ADDRESS=PerportyHandler.getPerportyValue(PerportyHandler.MONGODB_SERVER_ADDRESS);
+		}
+		if(MONGODB_SERVER_PORT_INTEGER==0){
+			MONGODB_SERVER_PORT_INTEGER=Integer.parseInt(PerportyHandler.getPerportyValue(PerportyHandler.MONGODB_SERVER_PORT));
+		}
 		Session session=null;
 		DocumentNodeStore nodeStore=null;
 		boolean registerResult=false;
 		try {
 			String metaDataContentSpace=JCRContentReposityConstant.METEDATA_CONTENTSPACE;
-			DB db = new MongoClient("127.0.0.1", 27017).getDB(metaDataContentSpace);
+			DB db = new MongoClient(MONGODB_SERVER_ADDRESS, MONGODB_SERVER_PORT_INTEGER).getDB(metaDataContentSpace);
 	        nodeStore = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
 	        Repository contentRepository  = new Jcr(new Oak(nodeStore)).createRepository();
 			
 	        String BUILDIN_ADMINISTRATOR_ACCOUNT=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT);
-			String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN__ADMINISTRATOR_ACCOUNT_PWD);
+			String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT_PWD);
 			SimpleCredentials loginCredentials=new SimpleCredentials(BUILDIN_ADMINISTRATOR_ACCOUNT, BUILDIN__ADMINISTRATOR_ACCOUNT_PWD.toCharArray());				
 			if(PerportyHandler.getPerportyValue(PerportyHandler.USER_AUTHENTICATION_METHOD).equals(SecurityOperationConstant.USER_AUTHENTICATION_METHOD_LDAP)){
 				loginCredentials.setAttribute(JCRContentReposityConstant.USER_LOGIN_TIME, new Date());	

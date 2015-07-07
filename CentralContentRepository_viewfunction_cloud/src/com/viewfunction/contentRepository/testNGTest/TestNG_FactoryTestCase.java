@@ -71,7 +71,7 @@ import com.viewfunction.contentRepository.util.observationImpl.JCRDefaultContent
 			ContentSpace cs2=null;
 			try {
 				String BUILDIN_ADMINISTRATOR_ACCOUNT=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT);
-				String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN__ADMINISTRATOR_ACCOUNT_PWD);
+				String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT_PWD);
 				cs = ContentComponentFactory.connectContentSpace(TestCaseDataConstant.testContentSpaceName);
 				Assert.assertNotNull(cs);			
 				Assert.assertEquals(cs.getContentSpaceName(),TestCaseDataConstant.testContentSpaceName,"testContentSpaceName should be the same");			

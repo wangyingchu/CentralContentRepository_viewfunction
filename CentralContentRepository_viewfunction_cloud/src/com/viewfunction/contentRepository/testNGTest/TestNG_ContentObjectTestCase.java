@@ -809,7 +809,7 @@ public class TestNG_ContentObjectTestCase {
 		ContentSpace cs5=null;
 		try {
 			String BUILDIN_ADMINISTRATOR_ACCOUNT=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT);
-			String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN__ADMINISTRATOR_ACCOUNT_PWD);
+			String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT_PWD);
 			cs = ContentComponentFactory.connectContentSpace(TestCaseDataConstant.testContentSpaceName);
 			
 			ContentObject rco=cs.getRootContentObject(TestCaseDataConstant.testRootContentObjectName);
