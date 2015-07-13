@@ -22,7 +22,7 @@ public interface BinaryContent {
 	public InputStream getContentInputStream() throws ContentReposityException;
 	public long getContentSize() throws ContentReposityException;
 	
-	public boolean isLinkObject() throws ContentReposityException;	
+	//public boolean isLinkObject() throws ContentReposityException;	
 	
 	public LockObject lock(boolean isContentSpaceScoped) throws ContentReposityException;
 	public boolean unlock() throws ContentReposityException;

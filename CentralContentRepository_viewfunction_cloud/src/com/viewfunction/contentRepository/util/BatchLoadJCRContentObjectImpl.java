@@ -834,13 +834,13 @@ public class BatchLoadJCRContentObjectImpl  implements ContentObject{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	/*
 	@Override
 	public boolean isLinkContentObject() throws ContentReposityException {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	 */
 	@Override
 	public LockObject lock(boolean isContentSpaceScoped)
 			throws ContentReposityException {
@@ -917,5 +917,25 @@ public class BatchLoadJCRContentObjectImpl  implements ContentObject{
 	public String getLocker() throws ContentReposityException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<BaseContentObject> getSubLinkContentObjects(Object subContentObjectsKey)
+			throws ContentReposityException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BaseContentObject getSubLinkContentObject(Object subContentObjectsKey) throws ContentReposityException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean removeSubLinkContentObject(Object subContentKey, boolean recordVersion)
+			throws ContentReposityException {
+		// TODO Auto-generated method stub
+		return false;
 	}	
 }

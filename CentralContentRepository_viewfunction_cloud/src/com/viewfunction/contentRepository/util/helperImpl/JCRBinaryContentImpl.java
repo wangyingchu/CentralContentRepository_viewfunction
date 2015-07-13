@@ -205,14 +205,14 @@ public class JCRBinaryContentImpl implements BinaryContent{
 		// TODO Auto-generated method stub
 		return false;
 	}	
-
+	/*
 	@Override
 	public boolean isLinkObject() throws ContentReposityException {
 		ContentObject cco=ContentComponentFactory.createContentObject();
 		cco.setContentData(getBinaryContainerNode());
 		return cco.isLinkContentObject();
 	}	
-
+	*/
 	public void setBinaryContainerNode(Node binaryContainerNode) {
 		this.binaryContainerNode = binaryContainerNode;
 	}

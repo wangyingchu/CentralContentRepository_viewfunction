@@ -22,7 +22,6 @@ import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 import javax.jcr.ValueFormatException;
-import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.lock.LockManager;
@@ -369,13 +368,15 @@ public class JCRContentObjectImpl implements ContentObject{
 			}			
 			List<BaseContentObject> coList=new ArrayList<BaseContentObject>(); 
 			Node currentNode;
-			while(ni.hasNext()){				
-				currentNode=(Node)ni.next();				
-				ContentObject cco=	ContentComponentFactory.createContentObject();				
-				cco.setContentObjectName(currentNode.getName());
-				cco.setContentData(currentNode);
-				cco.setContentSession(getJcrSession());				
-				coList.add(cco);								
+			while(ni.hasNext()){	
+				currentNode=(Node)ni.next();
+				if(!currentNode.getName().equals(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER)){
+					ContentObject cco=	ContentComponentFactory.createContentObject();				
+					cco.setContentObjectName(currentNode.getName());
+					cco.setContentData(currentNode);
+					cco.setContentSession(getJcrSession());				
+					coList.add(cco);					
+				}							
 			}	
 			return coList;
 		} catch (RepositoryException e) {
@@ -912,51 +913,6 @@ public class JCRContentObjectImpl implements ContentObject{
 	}
 
 	@Override
-	public boolean addSubLinkContentObject(Object subContentKey,BaseContentObject linkedContentObject, boolean recordVersion)	throws ContentReposityException {		
-		if(isLocked()){
-			ContentReposityDataException cpe=new ContentReposityDataException();
-			throw cpe;
-		}
-		JCRContentObjectImpl targetObj=(JCRContentObjectImpl)linkedContentObject;
-		try {
-			if(targetObj.getJcrNode()==null){
-				ContentReposityDataException cpe=new ContentReposityDataException();				
-				throw cpe;
-			}
-			getJcrSession().getWorkspace().getVersionManager().checkout(getJcrNode().getPath());
-			String  tPath = targetObj.getJcrNode().getPath();
-			getJcrSession().getWorkspace().getVersionManager().checkout(targetObj.getJcrNode().getPath());			
-			targetObj.getJcrNode().addMixin("mix:shareable");
-			getJcrSession().save();			
-			String lPath=this.getJcrNode().getPath()+"/"+subContentKey.toString();			
-			Workspace ws=this.getJcrNode().getSession().getWorkspace();			
-			ws.clone(ws.getName(), tPath, lPath, false);
-			recordVersionLabel(recordVersion,"Added Link sub content object {"+subContentKey+" from "+linkedContentObject.getContentObjectName()+"}");
-			return true;
-		} catch (RepositoryException e) {
-			ContentReposityDataException cpe=new ContentReposityDataException();
-			cpe.initCause(e);
-			throw cpe;
-		}
-	}
-	
-	@Override
-	public boolean isLinkContentObject() throws ContentReposityException {		
-		try {
-			long shareSetNodesNum=this.getJcrNode().getSharedSet().getSize();			
-			if(shareSetNodesNum>1){
-				return true;
-			}else{
-				return false;
-			}			
-		} catch (RepositoryException e) {
-			ContentReposityDataException cpe=new ContentReposityDataException();
-			cpe.initCause(e);
-			throw cpe;
-		}
-	}
-
-	@Override
 	public LockObject lock(boolean isTemporaryLock) throws ContentReposityException {
 		String locker=getJcrSession().getUserID();
 		return lock(isTemporaryLock,locker);	
@@ -1244,7 +1200,14 @@ public class JCRContentObjectImpl implements ContentObject{
 	public long getSubContentObjectsCount() throws ContentReposityException {
 		try {
 			NodeIterator ni=getJcrNode().getNodes();
-			return ni.getSize();
+			long subContentObjectNumber=ni.getSize();
+			boolean hasLinkObjeckContainer=this.getJcrNode().hasNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+			if(hasLinkObjeckContainer){
+				return subContentObjectNumber-1;
+				
+			}else{
+				return subContentObjectNumber;
+			}
 		} catch (RepositoryException e) {
 			ContentReposityException cpe=new ContentReposityException();
 			cpe.initCause(e);
@@ -1332,6 +1295,197 @@ public class JCRContentObjectImpl implements ContentObject{
 			throw cpe;
 		} catch (RepositoryException e) {
 			ContentReposityException cpe=new ContentReposityException();
+			cpe.initCause(e);
+			throw cpe;
+		}
+	}
+	
+	/*
+	 Till Jackrabbit v3 OAK version 1.2.2 Workspace clone method is not supported, so can't use logic in CCR v2
+	@Override
+	public boolean addSubLinkContentObject(Object subContentKey,BaseContentObject linkedContentObject, boolean recordVersion)	throws ContentReposityException {		
+		if(isLocked()){
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			throw cpe;
+		}
+		JCRContentObjectImpl targetObj=(JCRContentObjectImpl)linkedContentObject;
+		try {
+			if(targetObj.getJcrNode()==null){
+				ContentReposityDataException cpe=new ContentReposityDataException();				
+				throw cpe;
+			}
+			getJcrSession().getWorkspace().getVersionManager().checkout(getJcrNode().getPath());
+			String  tPath = targetObj.getJcrNode().getPath();
+			getJcrSession().getWorkspace().getVersionManager().checkout(targetObj.getJcrNode().getPath());			
+			targetObj.getJcrNode().addMixin("mix:shareable");
+			getJcrSession().save();			
+			String lPath=this.getJcrNode().getPath()+"/"+subContentKey.toString();			
+			Workspace ws=this.getJcrNode().getSession().getWorkspace();			
+			ws.clone(ws.getName(), tPath, lPath, false);
+			recordVersionLabel(recordVersion,"Added Link sub content object {"+subContentKey+" from "+linkedContentObject.getContentObjectName()+"}");
+			return true;
+		} catch (RepositoryException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			cpe.initCause(e);
+			throw cpe;
+		}
+	}
+	
+	@Override
+	public boolean isLinkContentObject() throws ContentReposityException {		
+		try {
+			long shareSetNodesNum=this.getJcrNode().getSharedSet().getSize();			
+			if(shareSetNodesNum>1){
+				return true;
+			}else{
+				return false;
+			}			
+		} catch (RepositoryException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			cpe.initCause(e);
+			throw cpe;
+		}
+	}
+	*/
+	
+	@Override
+	public boolean addSubLinkContentObject(Object subContentKey,BaseContentObject linkedContentObject, boolean recordVersion)	throws ContentReposityException {		
+		if(isLocked()){
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			throw cpe;
+		}
+		JCRContentObjectImpl targetObj=(JCRContentObjectImpl)linkedContentObject;
+		try {
+			if(targetObj.getJcrNode()==null){
+				ContentReposityDataException cpe=new ContentReposityDataException();				
+				throw cpe;
+			}
+			getJcrSession().getWorkspace().getVersionManager().checkout(getJcrNode().getPath());
+			String  tPath = targetObj.getJcrNode().getPath();
+	
+			boolean hasLinkObjeckContainer=this.getJcrNode().hasNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+			if(!hasLinkObjeckContainer){
+				this.getJcrNode().addNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+				//Node linkObjectContainerJcrNode=this.getJcrNode().addNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+				//linkObjectContainerJcrNode.addMixin("mix:versionable");
+				//linkObjectContainerJcrNode.addMixin("mix:lockable");		
+			}
+			Node linkContainerObject=this.getJcrNode().getNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+			
+			Node subLinkNode=linkContainerObject.addNode(subContentKey.toString());
+			subLinkNode.setProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH, tPath);
+			getJcrSession().save();
+			recordVersionLabel(recordVersion,"Added Link sub content object {"+subContentKey+" from "+linkedContentObject.getContentObjectName()+"}");
+			return true;
+		} catch (RepositoryException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			cpe.initCause(e);
+			throw cpe;
+		}
+	}
+	
+	@Override
+	public List<BaseContentObject> getSubLinkContentObjects(Object subContentObjectsKey) throws ContentReposityException {
+		try {
+			List<BaseContentObject> coList=new ArrayList<BaseContentObject>(); 
+			boolean hasLinkObjeckContainer=this.getJcrNode().hasNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+			if(hasLinkObjeckContainer){
+				Node linkContainerObject=this.getJcrNode().getNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+				NodeIterator ni=linkContainerObject.getNodes();	
+				Node currentNode;
+				while(ni.hasNext()){	
+					currentNode=(Node)ni.next();
+					if(currentNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH)){
+						String subLinkChildNodePath=currentNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH).getValue().getString();
+						Node subLinkChildNode=this.getJcrSession().getNode(subLinkChildNodePath);
+						if(subLinkChildNode!=null){
+							if(subContentObjectsKey==null){
+								ContentObject cco=ContentComponentFactory.createContentObject();				
+								cco.setContentObjectName(currentNode.getName());
+								cco.setContentData(subLinkChildNode);
+								cco.setContentSession(getJcrSession());				
+								coList.add(cco);	
+							}else{
+								if(subContentObjectsKey.equals(currentNode.getName())){
+									ContentObject cco=ContentComponentFactory.createContentObject();				
+									cco.setContentObjectName(currentNode.getName());
+									cco.setContentData(subLinkChildNode);
+									cco.setContentSession(getJcrSession());				
+									coList.add(cco);
+								}
+							}
+						}						
+					}
+				}	
+			}
+			return coList;
+		} catch (RepositoryException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			cpe.initCause(e);
+			throw cpe;
+		}
+	}
+
+	@Override
+	public BaseContentObject getSubLinkContentObject(Object subContentObjectsKey) throws ContentReposityException {
+		try {
+			boolean hasLinkObjeckContainer=this.getJcrNode().hasNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+			if(hasLinkObjeckContainer){
+				Node linkContainerObject=this.getJcrNode().getNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+				NodeIterator ni=linkContainerObject.getNodes();	
+				Node currentNode;
+				while(ni.hasNext()){	
+					currentNode=(Node)ni.next();
+					if(subContentObjectsKey.equals(currentNode.getName())){
+						if(currentNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH)){
+							String subLinkChildNodePath=currentNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH).getValue().getString();
+							Node subLinkChildNode=this.getJcrSession().getNode(subLinkChildNodePath);
+							if(subLinkChildNode!=null){
+								ContentObject cco=ContentComponentFactory.createContentObject();				
+								cco.setContentObjectName(currentNode.getName());
+								cco.setContentData(subLinkChildNode);
+								cco.setContentSession(getJcrSession());		
+								return cco;
+							}
+						}
+					}
+					return null;
+				}	
+			}else{
+				return null;
+			}
+		} catch (RepositoryException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			cpe.initCause(e);
+			throw cpe;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean removeSubLinkContentObject(Object subContentKey, boolean recordVersion) throws ContentReposityException {
+		if(isLocked()){
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			throw cpe;
+		}
+		try {
+			getJcrSession().getWorkspace().getVersionManager().checkout(getJcrNode().getPath());
+			boolean hasLinkObjeckContainer=this.getJcrNode().hasNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+			if(!hasLinkObjeckContainer){
+				return false;		
+			}
+			Node linkContainerObject=this.getJcrNode().getNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+			if(linkContainerObject.hasNode(subContentKey.toString())){				
+				Node subNode=linkContainerObject.getNode(subContentKey.toString());				
+				subNode.remove();
+				getJcrSession().save();	
+				recordVersionLabel(recordVersion,"Removed Link sub content object {"+subContentKey.toString()+"}");				
+				return true;
+			}else{
+				return false;
+			}
+		} catch (RepositoryException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
 			cpe.initCause(e);
 			throw cpe;
 		}

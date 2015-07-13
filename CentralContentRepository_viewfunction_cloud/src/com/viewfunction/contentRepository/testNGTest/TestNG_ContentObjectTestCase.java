@@ -733,7 +733,7 @@ public class TestNG_ContentObjectTestCase {
 			Assert.fail("got ContentReposityException during testRenameProperty");
 		}	
 	}
-	/* in Jackrabbit OAK v1.2.2 workspace clone (ws.clone(ws.getName(), tPath, lPath, false)) method not implemented yet, so ignore this case
+	
 	@Test(dependsOnMethods = {"testRenameProperty"})
 	public void testAddSubLinkContentObject(){
 		ContentSpace cs=null;
@@ -744,12 +744,10 @@ public class TestNG_ContentObjectTestCase {
 			Assert.assertNotNull(rco);				
 			BaseContentObject bco1=rco.addSubContentObject("AddLinkTestCO1", null, true);
 			Assert.assertNotNull(bco1);
-			Assert.assertFalse(bco1.isLinkContentObject());	
 			bco1.addProperty("buildinProperty1", "buildinProperty1_value", true);	
 			
 			BaseContentObject bco2=rco.addSubContentObject("AddLinkTestCO2", null, true);
-			Assert.assertNotNull(bco2);
-			Assert.assertFalse(bco2.isLinkContentObject());		
+			Assert.assertNotNull(bco2);	
 			
 			boolean addLkr=bco2.addSubLinkContentObject("linkedFromAddLinkTestCO1", bco1, true);	
 			Assert.assertTrue(addLkr);
@@ -761,17 +759,12 @@ public class TestNG_ContentObjectTestCase {
 			Assert.assertNotNull(rco2);			
 			
 			BaseContentObject bco_o=rco2.getSubContentObject("AddLinkTestCO1");	
-			Assert.assertTrue(bco_o.isLinkContentObject());
-			
 			BaseContentObject bco3=rco2.getSubContentObject("AddLinkTestCO2");					
-			Assert.assertFalse(bco3.isLinkContentObject());	
-			
-			Assert.assertEquals(1,bco3.getSubContentObjects(null).size());				
+			Assert.assertEquals(bco3.getSubLinkContentObjects(null).size(),1);				
 			Assert.assertTrue((bco3.getCurrentVersion().getCurrentVersionLabels()[0]).contains("Added Link sub content object {linkedFromAddLinkTestCO1 from AddLinkTestCO1}"));			
 			
-			BaseContentObject bco4=bco3.getSubContentObject("linkedFromAddLinkTestCO1");
-			Assert.assertTrue(bco4.isLinkContentObject());			
-			
+			BaseContentObject bco4=bco3.getSubLinkContentObject("linkedFromAddLinkTestCO1");
+		
 			ContentObjectProperty p=bco4.getProperty("buildinProperty1");			
 			Assert.assertEquals("buildinProperty1_value", p.getPropertyValue().toString());				
 				
@@ -784,8 +777,12 @@ public class TestNG_ContentObjectTestCase {
 			Assert.assertEquals("addedFromLinkedOject_value", p3.getPropertyValue().toString());			
 			Assert.assertTrue(bco_o.getCurrentVersion().getCurrentVersionLabels()[0].contains("Added New property {addedFromLinkedOject}"));
 			
-			bco3.removeSubContentObject("linkedFromAddLinkTestCO1", true);			
-			Assert.assertFalse(bco_o.isLinkContentObject());			
+			bco3.removeSubContentObject("linkedFromAddLinkTestCO1", true);	
+			Assert.assertEquals(bco3.getSubLinkContentObjects(null).size(),1);
+			
+			bco3.removeSubLinkContentObject("linkedFromAddLinkTestCO1", true);	
+			Assert.assertEquals(bco3.getSubLinkContentObjects(null).size(),0);
+			
 			BaseContentObject bco_o2=rco2.getSubContentObject("AddLinkTestCO1");	
 			Assert.assertNotNull(bco_o2);			
 			BaseContentObject bco_o3=bco3.getSubContentObject("linkedFromAddLinkTestCO1");
@@ -797,10 +794,8 @@ public class TestNG_ContentObjectTestCase {
 			Assert.fail("got ContentReposityException during testAddSubLinkContentObject");
 		}	
 	}
-	*/
 	
-	@Test(dependsOnMethods = {"testRenameProperty"})
-	//@Test(dependsOnMethods = {"testAddSubLinkContentObject"})  
+	@Test(dependsOnMethods = {"testAddSubLinkContentObject"})  
 	public void testLock_Unlock(){
 		ContentSpace cs=null;
 		ContentSpace cs2=null;

@@ -210,6 +210,5 @@ public class JCRContentSpaceImpl implements ContentSpace{
 				throw cpe;
 			}
 		}
-		
 	}
 }

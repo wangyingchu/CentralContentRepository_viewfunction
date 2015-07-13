@@ -28,8 +28,10 @@ public interface BaseContentObject {
 	
 	//Operation link
 	public boolean addSubLinkContentObject(Object subContentKey,BaseContentObject linkedContentObject,boolean recordVersion) throws ContentReposityException;
-	public boolean isLinkContentObject() throws ContentReposityException;
-		
+	public List<BaseContentObject> getSubLinkContentObjects(Object subContentObjectsKey) throws ContentReposityException;
+	public BaseContentObject getSubLinkContentObject(Object subContentObjectsKey) throws ContentReposityException;
+	public boolean removeSubLinkContentObject(Object subContentKey,boolean recordVersion) throws ContentReposityException;
+	
 	//Operation version	
 	public VersionObject getCurrentVersion() throws ContentReposityException;
 	public List<VersionObject>getAllLinearVersions() throws ContentReposityException;
