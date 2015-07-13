@@ -12,9 +12,7 @@
 	<classpathentry kind="lib" path="lib/concurrent-1.3.4.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/geronimo-stax-api_1.0_spec-1.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/jcl-over-slf4j-1.6.4.jar"/>
 	<classpathentry kind="lib" path="lib/jcr-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.6.4.jar"/>
 	<classpathentry kind="lib" path="lib/tagsoup-1.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/mime-util-2.1.3.jar"/>
 	<classpathentry kind="lib" path="lib/guessencoding-1.4.jar"/>
@@ -45,8 +43,6 @@
 	<classpathentry kind="lib" path="lib/jhighlight-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jmatio-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/json-simple-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/logback-classic-1.0.12.jar"/>
-	<classpathentry kind="lib" path="lib/logback-core-1.0.12.jar"/>
 	<classpathentry kind="lib" path="lib/mapdb-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/pdfbox-1.8.8.jar"/>
 	<classpathentry kind="lib" path="lib/poi-3.11.jar"/>
@@ -77,5 +73,7 @@
 	<classpathentry kind="lib" path="lib/oak-tarmk-standby-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/oak-upgrade-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/mongo-java-driver-2.13.2.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-slf4j-impl-2.3.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-api-2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
