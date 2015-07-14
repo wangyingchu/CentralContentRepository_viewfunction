@@ -31,6 +31,7 @@ public interface BaseContentObject {
 	public List<BaseContentObject> getSubLinkContentObjects(Object subContentObjectsKey) throws ContentReposityException;
 	public BaseContentObject getSubLinkContentObject(Object subContentObjectsKey) throws ContentReposityException;
 	public boolean removeSubLinkContentObject(Object subContentKey,boolean recordVersion) throws ContentReposityException;
+	public long getSubLinkContentObjectsCount() throws ContentReposityException;
 	
 	//Operation version	
 	public VersionObject getCurrentVersion() throws ContentReposityException;

@@ -937,5 +937,11 @@ public class BatchLoadJCRContentObjectImpl  implements ContentObject{
 			throws ContentReposityException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public long getSubLinkContentObjectsCount() throws ContentReposityException {
+		// TODO Auto-generated method stub
+		return 0;
 	}	
 }

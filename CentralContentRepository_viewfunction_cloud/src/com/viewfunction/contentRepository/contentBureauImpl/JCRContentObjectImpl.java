@@ -1204,7 +1204,6 @@ public class JCRContentObjectImpl implements ContentObject{
 			boolean hasLinkObjeckContainer=this.getJcrNode().hasNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
 			if(hasLinkObjeckContainer){
 				return subContentObjectNumber-1;
-				
 			}else{
 				return subContentObjectNumber;
 			}
@@ -1371,7 +1370,9 @@ public class JCRContentObjectImpl implements ContentObject{
 				//linkObjectContainerJcrNode.addMixin("mix:lockable");		
 			}
 			Node linkContainerObject=this.getJcrNode().getNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
-			
+			if(linkContainerObject.hasNode(subContentKey.toString())){
+				return false;
+			}
 			Node subLinkNode=linkContainerObject.addNode(subContentKey.toString());
 			subLinkNode.setProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH, tPath);
 			getJcrSession().save();
@@ -1432,27 +1433,20 @@ public class JCRContentObjectImpl implements ContentObject{
 			boolean hasLinkObjeckContainer=this.getJcrNode().hasNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
 			if(hasLinkObjeckContainer){
 				Node linkContainerObject=this.getJcrNode().getNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
-				NodeIterator ni=linkContainerObject.getNodes();	
-				Node currentNode;
-				while(ni.hasNext()){	
-					currentNode=(Node)ni.next();
-					if(subContentObjectsKey.equals(currentNode.getName())){
-						if(currentNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH)){
-							String subLinkChildNodePath=currentNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH).getValue().getString();
-							Node subLinkChildNode=this.getJcrSession().getNode(subLinkChildNodePath);
-							if(subLinkChildNode!=null){
-								ContentObject cco=ContentComponentFactory.createContentObject();				
-								cco.setContentObjectName(currentNode.getName());
-								cco.setContentData(subLinkChildNode);
-								cco.setContentSession(getJcrSession());		
-								return cco;
-							}
+				if(linkContainerObject.hasNode(subContentObjectsKey.toString())){
+					Node subLinkNode=linkContainerObject.getNode(subContentObjectsKey.toString());
+					if(subLinkNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH)){
+						String subLinkChildNodePath=subLinkNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECT_PATH).getValue().getString();
+						Node subLinkChildNode=this.getJcrSession().getNode(subLinkChildNodePath);
+						if(subLinkChildNode!=null){
+							ContentObject cco=ContentComponentFactory.createContentObject();				
+							cco.setContentObjectName(subLinkNode.getName());
+							cco.setContentData(subLinkChildNode);
+							cco.setContentSession(getJcrSession());		
+							return cco;
 						}
 					}
-					return null;
-				}	
-			}else{
-				return null;
+				}
 			}
 		} catch (RepositoryException e) {
 			ContentReposityDataException cpe=new ContentReposityDataException();
@@ -1483,6 +1477,24 @@ public class JCRContentObjectImpl implements ContentObject{
 				return true;
 			}else{
 				return false;
+			}
+		} catch (RepositoryException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			cpe.initCause(e);
+			throw cpe;
+		}
+	}
+	@Override
+	public long getSubLinkContentObjectsCount() throws ContentReposityException {
+		try {
+			boolean hasLinkObjeckContainer=this.getJcrNode().hasNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+			if(hasLinkObjeckContainer){
+				Node linkContainerObject=this.getJcrNode().getNode(JCRContentReposityConstant.CONTENT_OBJECT_SUB_LINKOBJECTS_CONTAINER);
+				NodeIterator ni=linkContainerObject.getNodes();
+				long subLinkContentObjectNumber=ni.getSize();
+				return subLinkContentObjectNumber;
+			}else{
+				return 0;
 			}
 		} catch (RepositoryException e) {
 			ContentReposityDataException cpe=new ContentReposityDataException();
