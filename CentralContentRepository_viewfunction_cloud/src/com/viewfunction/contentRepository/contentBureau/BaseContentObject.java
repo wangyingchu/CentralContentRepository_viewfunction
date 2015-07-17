@@ -40,11 +40,11 @@ public interface BaseContentObject {
 	public boolean restoreToVersion(String targetVersion,boolean removeExisting) throws ContentReposityException;
 	
 	//Operation lock
-	public LockObject lock(boolean isContentSpaceScoped) throws ContentReposityException;
+	public LockObject lock(boolean isTemporaryLock) throws ContentReposityException;
 	public boolean unlock() throws ContentReposityException;
 	public boolean isLocked() throws ContentReposityException;
 	public LockObject getLockOject() throws ContentReposityException;	
-	public LockObject lock(boolean isContentSpaceScoped,String locker) throws ContentReposityException;
+	public LockObject lock(boolean isTemporaryLock,String locker) throws ContentReposityException;
 	public boolean unlock(String locker) throws ContentReposityException;
 	public String getLocker() throws ContentReposityException;	
 	

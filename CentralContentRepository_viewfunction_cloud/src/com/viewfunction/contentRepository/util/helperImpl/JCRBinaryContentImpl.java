@@ -30,6 +30,7 @@ import com.viewfunction.contentRepository.contentBureau.PermissionObject;
 import com.viewfunction.contentRepository.contentBureau.VersionObject;
 import com.viewfunction.contentRepository.contentBureauImpl.JCRCommentObjectImpl;
 import com.viewfunction.contentRepository.contentBureauImpl.JCRContentObjectImpl;
+import com.viewfunction.contentRepository.contentBureauImpl.JCRContentReposityConstant;
 import com.viewfunction.contentRepository.contentBureauImpl.JCRLockObjectImpl;
 import com.viewfunction.contentRepository.util.exception.ContentReposityDataException;
 import com.viewfunction.contentRepository.util.exception.ContentReposityException;
@@ -247,79 +248,68 @@ public class JCRBinaryContentImpl implements BinaryContent{
 	public void setLastModifiedBy(String lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
 	}
-
+		
 	@Override
-	public LockObject lock(boolean isContentSpaceScoped)throws ContentReposityException {		
-		try {			
-			Node fileNode = getBinaryContainerNode();
-	        Node resNode = fileNode.getNode("jcr:content");	 	            	
-	        LockManager lm=resNode.getSession().getWorkspace().getLockManager();	            	
-	    	String nodPath=resNode.getPath();
-	    	String locker=resNode.getSession().getUserID();
-	    	long timeoutHint=Long.MAX_VALUE;			    					
-	    	Lock lk=lm.lock(nodPath, false, isContentSpaceScoped, timeoutHint, locker);
-	    	if(!isContentSpaceScoped){
-	    		String lockToken=lk.getLockToken();
-	    		resNode.setProperty("vfcr:contentLockToken", lockToken);
-	    		resNode.getSession().save();
-	    	}			
-	    	LockObject lo=ContentComponentFactory.createLockObject();
-	    	((JCRLockObjectImpl)lo).setLockData(lk);
-	    	return lo;			
-		} catch (RepositoryException e) {			
+	public LockObject lock(boolean isTemporaryLock) throws ContentReposityException {
+		Node fileNode = getBinaryContainerNode();
+		String locker;
+		try {
+			locker = fileNode.getSession().getUserID();
+			return lock(isTemporaryLock,locker);
+		} catch (RepositoryException e) {
 			ContentReposityException cpe=new ContentReposityException();
 			cpe.initCause(e);
 			throw cpe;
-		}	
+		}
+	}
+	
+	@Override
+	public boolean unlock() throws ContentReposityException {
+		Node fileNode = getBinaryContainerNode();
+		String currentUser;
+		try {
+			currentUser = fileNode.getSession().getUserID();
+			return unlock(currentUser);
+		} catch (RepositoryException e) {
+			ContentReposityException cpe=new ContentReposityException();
+			cpe.initCause(e);
+			throw cpe;
+		}
 	}
 
 	@Override
-	public boolean unlock() throws ContentReposityException {
-		try {			
-			Node fileNode = getBinaryContainerNode();
-			Node resNode = fileNode.getNode("jcr:content");	            	
-        	LockManager lm=resNode.getSession().getWorkspace().getLockManager();
-			String nodPath=resNode.getPath();
-			Lock lk=lm.getLock(nodPath);
-			if(!resNode.getSession().getUserID().equals(lk.getLockOwner())){
-				return false;
-			}else{
-				if(!lk.isSessionScoped()){
-					if(!lk.isLockOwningSession()){
-						Property tokenP=resNode.getProperty("vfcr:contentLockToken");
-						String lockTokenString=tokenP.getString();
-						lm.addLockToken(lockTokenString);
-						tokenP.remove();
-						resNode.getSession().save();
-					}
-				}
-				lm.unlock(nodPath); 				
-				return true;				
-			}					
-		} catch (RepositoryException e) {			
-			ContentReposityException cpe=new ContentReposityException();
-			cpe.initCause(e);
-			throw cpe;
-		}	
-	}	
-	
-	@Override
-	public LockObject lock(boolean isContentSpaceScoped,String locker)throws ContentReposityException {		
+	public LockObject lock(boolean isTemporaryLock,String locker)throws ContentReposityException {		
 		try {			
 			Node fileNode = getBinaryContainerNode();
 	        Node resNode = fileNode.getNode("jcr:content");	 	            	
 	        LockManager lm=resNode.getSession().getWorkspace().getLockManager();	            	
 	    	String nodPath=resNode.getPath();	    	
 	    	long timeoutHint=Long.MAX_VALUE;			    					
-	    	Lock lk=lm.lock(nodPath, false, isContentSpaceScoped, timeoutHint, locker);
-	    	if(!isContentSpaceScoped){
-	    		String lockToken=lk.getLockToken();
-	    		resNode.setProperty("vfcr:contentLockToken", lockToken);
-	    		resNode.getSession().save();
-	    	}			
-	    	LockObject lo=ContentComponentFactory.createLockObject();
+	    	Lock lk=lm.lock(nodPath, false, isTemporaryLock, timeoutHint, locker);
+	    	LockObject lo = ContentComponentFactory.createLockObject();
 	    	((JCRLockObjectImpl)lo).setLockData(lk);
-	    	return lo;			
+	    	if(locker!=null){
+	    		resNode.setProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_OWNER, locker);
+	    		resNode.getSession().save();
+	    		((JCRLockObjectImpl)lo).setLocker(locker);
+	    	}else{
+	    		ContentReposityDataException cpe = new ContentReposityDataException();
+		    	throw cpe;
+	    	}
+	    	if (!isTemporaryLock) {
+	    		String lockToken = lk.getLockToken();
+	    		resNode.setProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_TOKEN, lockToken);
+	    		Date currentDateTime=new Date();
+	    		long currentDateTimeInLong=currentDateTime.getTime();
+	    		resNode.setProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_LOCKTIME, currentDateTimeInLong);
+	    		resNode.getSession().save();	
+	    		((JCRLockObjectImpl)lo).setLockDate(currentDateTime);
+	    	}else{
+	    		Date currentDateTime=new Date();
+	    		((JCRLockObjectImpl)lo).setTemporaryLock(true);
+	    		((JCRLockObjectImpl)lo).setLockDate(currentDateTime);
+	    	}
+	    	return lo;
 		} catch (RepositoryException e) {			
 			ContentReposityException cpe=new ContentReposityException();
 			cpe.initCause(e);
@@ -329,46 +319,48 @@ public class JCRBinaryContentImpl implements BinaryContent{
 
 	@Override
 	public boolean unlock(String locker) throws ContentReposityException {
-		try {			
+		try {	
 			Node fileNode = getBinaryContainerNode();
-			Node resNode = fileNode.getNode("jcr:content");	            	
-        	LockManager lm=resNode.getSession().getWorkspace().getLockManager();
-			String nodPath=resNode.getPath();
-			Lock lk=lm.getLock(nodPath);
-			if(!locker.equals(lk.getLockOwner())){
-				return false;
+			Node resNode = fileNode.getNode("jcr:content");	
+			if(resNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_OWNER)){
+				String currentLocker=resNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_OWNER).getValue().toString();
+				if(!locker.equals(currentLocker)){
+					return false;
+				}
 			}else{
+				return false;
+			}
+			//check if temporary locked
+			LockManager lm=resNode.getSession().getWorkspace().getLockManager();
+			String nodPath=resNode.getPath();
+			boolean isNodeLocked=lm.isLocked(nodPath);
+			if(isNodeLocked){
+				Lock lk=lm.getLock(nodPath);
+				String lockTokenString="";
 				if(!lk.isSessionScoped()){
 					if(!lk.isLockOwningSession()){
-						Property tokenP=resNode.getProperty("vfcr:contentLockToken");
-						String lockTokenString=tokenP.getString();
+						Property tokenP=resNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_TOKEN);
+						lockTokenString=tokenP.getString();
 						lm.addLockToken(lockTokenString);
 						tokenP.remove();
 						resNode.getSession().save();
 					}
 				}
-				lm.unlock(nodPath); 				
-				return true;				
-			}					
-		} catch (RepositoryException e) {			
-			ContentReposityException cpe=new ContentReposityException();
-			cpe.initCause(e);
-			throw cpe;
-		}	
-	}	
-	
-	@Override
-	public String getLocker() throws ContentReposityException {
-		try {
-			if(!this.isLocked()){
-				return null;
-			}			
-			Node fileNode = getBinaryContainerNode();
-			Node resNode = fileNode.getNode("jcr:content");	            	
-        	LockManager lm=resNode.getSession().getWorkspace().getLockManager();
-			String nodPath=resNode.getPath();
-			Lock lk=lm.getLock(nodPath);			
-			return lk.getLockOwner();			
+				lm.unlock(nodPath); 
+			}
+			//check if persist locked
+			Property ownerProperty=resNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_OWNER);
+			ownerProperty.remove();
+			if(resNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_LOCKTIME)){
+				Property lockDateProperty=resNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_LOCKTIME);
+				lockDateProperty.remove();
+			}
+			if(resNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_TOKEN)){
+				Property lockTockenProperty=resNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_TOKEN);
+				lockTockenProperty.remove();
+			}
+			resNode.getSession().save();
+			return true;
 		} catch (UnsupportedRepositoryOperationException e) {
 			ContentReposityDataException cpe=new ContentReposityDataException();
 			cpe.initCause(e);
@@ -378,21 +370,85 @@ public class JCRBinaryContentImpl implements BinaryContent{
 			cpe.initCause(e);
 			throw cpe;
 		}
-	}		
+	}	 
+
+	private LockObject getLockOject() throws ContentReposityException {
+		try {
+			if(!this.isLocked()){
+				return null;
+			}			
+			Node fileNode = getBinaryContainerNode();
+			Node resNode = fileNode.getNode("jcr:content");	
+			
+			LockObject lo=ContentComponentFactory.createLockObject();
+			LockManager lm=resNode.getSession().getWorkspace().getLockManager();
+			String nodPath=resNode.getPath();	
+			boolean isNodeLocked=lm.isLocked(nodPath);
+			if(isNodeLocked){
+				Lock ol=lm.getLock(nodPath);	
+				((JCRLockObjectImpl)lo).setLockData(ol);
+				((JCRLockObjectImpl)lo).setTemporaryLock(true);
+			}
+			if(resNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_TOKEN)){
+				((JCRLockObjectImpl)lo).setTemporaryLock(false);
+			}
+			if(resNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_OWNER)){
+				String currentLocker=resNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_OWNER).getValue().toString();
+				((JCRLockObjectImpl)lo).setLocker(currentLocker);
+			}
+			if(resNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_LOCKTIME)){
+				long lockDateInLong=resNode.getProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_LOCKTIME).getValue().getLong();
+				((JCRLockObjectImpl)lo).setLockDate(new Date(lockDateInLong));
+			}
+			return lo;			
+		} catch (UnsupportedRepositoryOperationException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			cpe.initCause(e);
+			throw cpe;
+		} catch (RepositoryException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			cpe.initCause(e);
+			throw cpe;
+		}
+	}	
+	
+	@Override
+	public String getLocker() throws ContentReposityException{
+		if (!this.isLocked()) {
+			return null;
+		}
+		return getLockOject().getLocker();
+	}
 	
 	@Override
 	public boolean isLocked() throws ContentReposityException {
-		try {			
+		try {
 			Node fileNode = getBinaryContainerNode();
-			Node resNode = fileNode.getNode("jcr:content");	            	
-        	LockManager lm=resNode.getSession().getWorkspace().getLockManager();   
-			String nodPath=resNode.getPath();
-			return lm.isLocked(nodPath);	
-		} catch (RepositoryException e) {			
-			ContentReposityException cpe=new ContentReposityException();
+			Node resNode = fileNode.getNode("jcr:content");	
+			//check if temporary locked
+			LockManager lm=resNode.getSession().getWorkspace().getLockManager();
+			String nodPath=resNode.getPath();	
+			boolean isNodeLocked=lm.isLocked(nodPath);
+			if(isNodeLocked){
+				return true;
+			}else{
+				//check if persist locked
+				if(resNode.hasProperty(JCRContentReposityConstant.CONTENT_OBJECT_JCR_LOCK_TOKEN)){
+					return true;
+				}else{
+					return false;
+				}
+			}			
+			
+		} catch (UnsupportedRepositoryOperationException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
 			cpe.initCause(e);
 			throw cpe;
-		}	
+		} catch (RepositoryException e) {
+			ContentReposityDataException cpe=new ContentReposityDataException();
+			cpe.initCause(e);
+			throw cpe;
+		}
 	}
 
 	@Override

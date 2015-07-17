@@ -9,14 +9,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 import com.viewfunction.contentRepository.contentBureau.BaseContentObject;
+import com.viewfunction.contentRepository.contentBureau.CommentObject;
 import com.viewfunction.contentRepository.contentBureau.ContentObject;
 import com.viewfunction.contentRepository.contentBureau.ContentSpace;
+import com.viewfunction.contentRepository.contentBureau.LockObject;
 import com.viewfunction.contentRepository.contentBureau.RootContentObject;
 import com.viewfunction.contentRepository.util.exception.ContentReposityException;
 import com.viewfunction.contentRepository.util.factory.ContentComponentFactory;
@@ -166,7 +169,82 @@ public class TestNG_ContentOperationHelperTestCase {
 			//boolean b26=coh.addBinaryContent(folderCo,new File("testBinaryContentFile/冬天.jpg"), "冬天.jpg",true);
 			//Assert.assertFalse(b26);			
 			List<BinaryContent> bcol=coh.getBinaryContents(folderCo);			
-			Assert.assertEquals(12, bcol.size(),"Added binaryContents number should be 13");		
+			Assert.assertEquals(12, bcol.size(),"Added binaryContents number should be 13");	
+			
+			BinaryContent bcoForTestLock=coh.getBinaryContent(folderCo,"vaadin621.pdf");
+			Assert.assertNotNull(bcoForTestLock);
+			LockObject lo0=bcoForTestLock.lock(false);
+			
+			Assert.assertFalse(lo0.isTemporaryLock());
+			Assert.assertNotNull(lo0.getLockDate());
+			Assert.assertNotNull(lo0.getLocker());
+			
+			Assert.assertTrue(bcoForTestLock.isLocked());
+			boolean wrongPeopleUnlock=bcoForTestLock.unlock("wangychu");
+			Assert.assertFalse(wrongPeopleUnlock);
+			Assert.assertTrue(bcoForTestLock.isLocked());
+			boolean rightPeopleUnlock=bcoForTestLock.unlock();
+			Assert.assertTrue(rightPeopleUnlock);
+			Assert.assertFalse(bcoForTestLock.isLocked());
+			
+			LockObject lo1=bcoForTestLock.lock(false,"wangychu");
+			Assert.assertFalse(lo1.isTemporaryLock());
+			Assert.assertNotNull(lo1.getLockDate());
+			Assert.assertEquals(lo1.getLocker(), "wangychu","locker id should be wangychu");
+			Assert.assertTrue(bcoForTestLock.isLocked());
+			
+			boolean wrongPeopleUnlock2=bcoForTestLock.unlock("wangychu1");
+			Assert.assertFalse(wrongPeopleUnlock2);
+			Assert.assertTrue(bcoForTestLock.isLocked());
+			boolean wrongPeopleUnlock3=bcoForTestLock.unlock();
+			Assert.assertFalse(wrongPeopleUnlock3);
+			Assert.assertTrue(bcoForTestLock.isLocked());
+			boolean rightPeopleUnlock2=bcoForTestLock.unlock("wangychu");
+			Assert.assertTrue(rightPeopleUnlock2);
+			Assert.assertFalse(bcoForTestLock.isLocked());
+			
+			BinaryContent bcoForTestComment=coh.getBinaryContent(folderCo,"vaadin621.pdf");
+			Assert.assertNotNull(bcoForTestComment);
+			CommentObject comment=ContentComponentFactory.createCommentObject();
+			comment.setCommentAuthor("wangychu");
+			comment.setCommentContent("comment123");
+			long newCommentPostTime=new Date().getTime();
+			comment.setCommentCreateDate(newCommentPostTime);
+			bcoForTestComment.addComment(comment);
+			
+			List<CommentObject> cl=bcoForTestComment.getComments();
+			Assert.assertEquals(cl.size(), 1,"comments number should be 1");
+			CommentObject firstCommentObject=cl.get(0);
+			
+			Assert.assertEquals(firstCommentObject.getCommentAuthor(),"wangychu");
+			Assert.assertEquals(firstCommentObject.getCommentContent(),"comment123");
+			Assert.assertEquals(firstCommentObject.getCommentCreateDate(),newCommentPostTime);
+			Assert.assertEquals(firstCommentObject.getSubComments().size(), 0,"sub comments number should be 0");
+			
+			CommentObject comment1=ContentComponentFactory.createCommentObject();
+			comment1.setCommentAuthor("wangychu_1");
+			comment1.setCommentContent("comment123_1");
+			long newCommentPostTime1=new Date().getTime();
+			comment1.setCommentCreateDate(newCommentPostTime1);
+			bcoForTestComment.addComment(comment1);
+			List<CommentObject> cl1=bcoForTestComment.getComments();
+			Assert.assertEquals(cl1.size(), 2,"comments number should be 2");
+			
+			CommentObject comment2=ContentComponentFactory.createCommentObject();
+			comment2.setCommentAuthor("wangychu_2");
+			comment2.setCommentContent("comment123_2");
+			comment2.setCommentCreateDate(newCommentPostTime1);
+			
+			CommentObject subComment=firstCommentObject.addSubComment(comment2);
+			Assert.assertEquals(firstCommentObject.getSubComments().size(), 1,"sub comments number should be 1");
+			Assert.assertEquals(subComment.getParentComment().getCommentId(), firstCommentObject.getCommentId());
+			
+			Assert.assertEquals(subComment.getCommentAuthor(),"wangychu_2");
+			Assert.assertEquals(subComment.getCommentContent(),"comment123_2");
+			Assert.assertEquals(subComment.getCommentCreateDate(),newCommentPostTime1);
+			
+			firstCommentObject.deleteSubComment(subComment.getCommentId());
+			Assert.assertEquals(firstCommentObject.getSubComments().size(), 0,"sub comments number should be 0");
 			cs.closeContentSpace();
 		} catch (ContentReposityException e) {
 			e.printStackTrace();

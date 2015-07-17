@@ -9,8 +9,6 @@ import javax.jcr.nodetype.NodeTypeManager;
 import javax.jcr.nodetype.NodeTypeTemplate;
 import javax.jcr.nodetype.PropertyDefinitionTemplate;
 
-import org.apache.jackrabbit.oak.plugins.nodetype.NodeTypeConstants;
-
 public class ContentReposityCustomNodesConfigUtil {
 	/* ContentReposityCustomNodes.config content
 	 * 
@@ -24,6 +22,7 @@ public class ContentReposityCustomNodesConfigUtil {
 	- vfcr:contentOwnerPermission (string)
 	- vfcr:contentOtherPermission (string)
 	- vfcr:contentGroupPermission (string) MULTIPLE
+	+ vfcr:binaryCommonMetaNode (nt:unstructured)  //extend point for store information in the future
 	[vfcr:resource] > nt:resource, mix:versionable ,mix:lockable
 	- vfcr:contentName (string) mandatory
 	- vfcr:contentDescription (string)
@@ -31,9 +30,11 @@ public class ContentReposityCustomNodesConfigUtil {
 	- vfcr:lastUpdatePerson (string)
 	- vfcr:createDate (Date)
 	- vfcr:lastUpdateDate (Date)
-	- vfcr:contentLockToken (string)
-	- vfcr:contentTags (string) MULTIPLE
-	+ * (nt:unstructured)
+	- vfcr:lockToken (string)
+	- vfcr:lockOwner (string)
+	- vfcr:lockTime (long)
+	+ vfcr:contentCommentsNode (nt:unstructured)
+	+ vfcr:contentCommonMetaNode (nt:unstructured)  //extend point for store information in the future
 	[vfcr:content] > nt:base, mix:versionable
 	orderable mixin
 	*
@@ -83,6 +84,13 @@ public class ContentReposityCustomNodesConfigUtil {
 			contentGroupPermissionPropertyDefinition.setMultiple(true);
 			contentGroupPermissionPropertyDefinition.setMandatory(false);
 			binaryNodeTypeTemplate.getPropertyDefinitionTemplates().add(contentGroupPermissionPropertyDefinition);
+			
+			NodeDefinitionTemplate commonBinaryChildNodeTypeDefinition=nodeTypeManager.createNodeDefinitionTemplate();
+			commonBinaryChildNodeTypeDefinition.setName("vfcr:binaryCommonMetaNode");
+			commonBinaryChildNodeTypeDefinition.setDefaultPrimaryTypeName("nt:unstructured");
+			commonBinaryChildNodeTypeDefinition.setRequiredPrimaryTypeNames(new String[]{"nt:unstructured"});
+			commonBinaryChildNodeTypeDefinition.setMandatory(false);
+			binaryNodeTypeTemplate.getNodeDefinitionTemplates().add(commonBinaryChildNodeTypeDefinition);
 				
 			nodeTypeManager.registerNodeType(binaryNodeTypeTemplate, true);
 			//Register vfcr:binary end
@@ -134,27 +142,42 @@ public class ContentReposityCustomNodesConfigUtil {
 			lastUpdateDatePropertyDefinition.setMultiple(false);
 			lastUpdateDatePropertyDefinition.setMandatory(false);
 			resourceNodeTypeTemplate.getPropertyDefinitionTemplates().add(lastUpdateDatePropertyDefinition);
-				
-			PropertyDefinitionTemplate contentLockTokenPropertyDefinition=nodeTypeManager.createPropertyDefinitionTemplate();
-			contentLockTokenPropertyDefinition.setName("vfcr:contentLockToken");
-			contentLockTokenPropertyDefinition.setRequiredType(PropertyType.STRING);
-			contentLockTokenPropertyDefinition.setMultiple(false);
-			contentLockTokenPropertyDefinition.setMandatory(false);
-			resourceNodeTypeTemplate.getPropertyDefinitionTemplates().add(contentLockTokenPropertyDefinition);
-				
-			PropertyDefinitionTemplate contentTags_1PropertyDefinition=nodeTypeManager.createPropertyDefinitionTemplate();
-			contentTags_1PropertyDefinition.setName("vfcr:contentTags");
-			contentTags_1PropertyDefinition.setRequiredType(PropertyType.STRING);
-			contentTags_1PropertyDefinition.setMultiple(true);
-			contentTags_1PropertyDefinition.setMandatory(false);
-			resourceNodeTypeTemplate.getPropertyDefinitionTemplates().add(contentTags_1PropertyDefinition);
+			
+			
+			PropertyDefinitionTemplate lockTokenPropertyDefinition=nodeTypeManager.createPropertyDefinitionTemplate();
+			lockTokenPropertyDefinition.setName("vfcr:lockToken");
+			lockTokenPropertyDefinition.setRequiredType(PropertyType.STRING);
+			lockTokenPropertyDefinition.setMultiple(false);
+			lockTokenPropertyDefinition.setMandatory(false);
+			resourceNodeTypeTemplate.getPropertyDefinitionTemplates().add(lockTokenPropertyDefinition);
+			
+			PropertyDefinitionTemplate lockOwnerPropertyDefinition=nodeTypeManager.createPropertyDefinitionTemplate();
+			lockOwnerPropertyDefinition.setName("vfcr:lockOwner");
+			lockOwnerPropertyDefinition.setRequiredType(PropertyType.STRING);
+			lockOwnerPropertyDefinition.setMultiple(false);
+			lockOwnerPropertyDefinition.setMandatory(false);
+			resourceNodeTypeTemplate.getPropertyDefinitionTemplates().add(lockOwnerPropertyDefinition);
+			
+			PropertyDefinitionTemplate lockTimePropertyDefinition=nodeTypeManager.createPropertyDefinitionTemplate();
+			lockTimePropertyDefinition.setName("vfcr:lockTime");
+			lockTimePropertyDefinition.setRequiredType(PropertyType.LONG);
+			lockTimePropertyDefinition.setMultiple(false);
+			lockTimePropertyDefinition.setMandatory(false);
+			resourceNodeTypeTemplate.getPropertyDefinitionTemplates().add(lockTimePropertyDefinition);
 			
 			NodeDefinitionTemplate commonChildNodeTypeDefinition=nodeTypeManager.createNodeDefinitionTemplate();
-			commonChildNodeTypeDefinition.setName(NodeTypeConstants.REP_RESIDUAL_CHILD_NODE_DEFINITIONS);
+			commonChildNodeTypeDefinition.setName("vfcr:contentCommonMetaNode");
 			commonChildNodeTypeDefinition.setDefaultPrimaryTypeName("nt:unstructured");
 			commonChildNodeTypeDefinition.setRequiredPrimaryTypeNames(new String[]{"nt:unstructured"});
 			commonChildNodeTypeDefinition.setMandatory(false);
 			resourceNodeTypeTemplate.getNodeDefinitionTemplates().add(commonChildNodeTypeDefinition);
+			
+			NodeDefinitionTemplate commentChildNodeTypeDefinition=nodeTypeManager.createNodeDefinitionTemplate();
+			commentChildNodeTypeDefinition.setName("vfcr:contentCommentsNode");
+			commentChildNodeTypeDefinition.setDefaultPrimaryTypeName("nt:unstructured");
+			commentChildNodeTypeDefinition.setRequiredPrimaryTypeNames(new String[]{"nt:unstructured"});
+			commentChildNodeTypeDefinition.setMandatory(false);
+			resourceNodeTypeTemplate.getNodeDefinitionTemplates().add(commentChildNodeTypeDefinition);
 			
 			nodeTypeManager.registerNodeType(resourceNodeTypeTemplate, true);
 			//Register vfcr:resource end

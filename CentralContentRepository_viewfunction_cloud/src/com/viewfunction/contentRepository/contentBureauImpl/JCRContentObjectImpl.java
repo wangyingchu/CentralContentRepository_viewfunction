@@ -965,7 +965,7 @@ public class JCRContentObjectImpl implements ContentObject{
 	    	cpe.initCause(e);
 	    	throw cpe;
 	    }
-	 }
+	}
 
 	@Override
 	public boolean unlock() throws ContentReposityException {
