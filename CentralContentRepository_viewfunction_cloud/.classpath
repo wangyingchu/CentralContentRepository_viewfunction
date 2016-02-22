@@ -21,23 +21,12 @@
 	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/juniversalchardet-1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-3.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/asm-debug-all-4.1.jar"/>
 	<classpathentry kind="lib" path="lib/aspectjrt-1.8.0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.9.jar"/>
 	<classpathentry kind="lib" path="lib/fontbox-1.8.8.jar"/>
 	<classpathentry kind="lib" path="lib/guava-15.0.jar"/>
 	<classpathentry kind="lib" path="lib/isoparser-1.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-api-2.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-core-2.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-data-2.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-jcr-commons-2.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-jcr-rmi-2.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-jcr-server-2.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-jcr-servlet-2.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-spi-2.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-spi-commons-2.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackrabbit-webdav-2.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/java-libpst-0.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/jempbox-1.8.8.jar"/>
 	<classpathentry kind="lib" path="lib/jhighlight-1.0.jar"/>
@@ -49,32 +38,42 @@
 	<classpathentry kind="lib" path="lib/poi-ooxml-3.11.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.11.jar"/>
 	<classpathentry kind="lib" path="lib/poi-scratchpad-3.11.jar"/>
-	<classpathentry kind="lib" path="lib/tika-core-1.7.jar"/>
-	<classpathentry kind="lib" path="lib/tika-parsers-1.7.jar"/>
 	<classpathentry kind="lib" path="lib/vorbis-java-core-0.6.jar"/>
 	<classpathentry kind="lib" path="lib/vorbis-java-tika-0.6.jar"/>
 	<classpathentry kind="lib" path="lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/xz-1.5.jar"/>
-	<classpathentry kind="lib" path="lib/oak-auth-external-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-auth-ldap-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-authorization-cug-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-blob-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-blob-cloud-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-commons-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-core-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-http-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-jcr-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-lucene-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-mk-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-mk-api-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-pojosr-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-solr-core-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-solr-osgi-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-tarmk-standby-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/oak-upgrade-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/mongo-java-driver-2.13.2.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-slf4j-impl-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-api-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-core-2.3.jar"/>
+	<classpathentry kind="lib" path="lib/tika-core-1.9.jar"/>
+	<classpathentry kind="lib" path="lib/tika-parsers-1.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-auth-external-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-auth-ldap-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-authorization-cug-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-blob-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-blob-cloud-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-commons-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-core-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-http-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-jcr-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-lucene-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-mk-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-mk-api-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-pojosr-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-solr-core-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-solr-osgi-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-tarmk-standby-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/oak-upgrade-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-api-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-core-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-data-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-jcr-commons-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-jcr-rmi-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-jcr-server-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-jcr-servlet-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-spi-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-spi-commons-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-webdav-2.12.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

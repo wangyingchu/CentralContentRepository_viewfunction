@@ -41,13 +41,13 @@
       <class name="com.viewfunction.contentRepository.testNGTest.TestNG_ObjectCollectionHelperTestCase"/>
     </classes>
   </test>
-  
+   
     <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentQueryHelperTestCase">
     <classes>
       <class name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentQueryHelperTestCase"/>
     </classes>
   </test>  
-  <!--
+ <!--
   <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_SecurityOperationHelperTestCase">
     <classes>
       <class name="com.viewfunction.contentRepository.testNGTest.TestNG_SecurityOperationHelperTestCase"/>
