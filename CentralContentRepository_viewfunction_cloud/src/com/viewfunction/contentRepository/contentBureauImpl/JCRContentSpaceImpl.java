@@ -11,6 +11,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 
+import org.apache.jackrabbit.oak.jcr.repository.RepositoryImpl;
 import org.apache.jackrabbit.oak.plugins.document.DocumentNodeStore;
 
 import com.viewfunction.contentRepository.contentBureau.BaseContentObject;
@@ -155,7 +156,10 @@ public class JCRContentSpaceImpl implements ContentSpace{
 	@Override
 	public void closeContentSpace() {
 		if(this.jcrSession!=null){
+			RepositoryImpl repository=(RepositoryImpl)this.jcrSession.getRepository();
 			this.jcrSession.logout();
+			//must shutdown repository,otherwise will cause thread leak for thread named [oak-scheduled-executor-XXXX]
+			repository.shutdown();
 		}	
 		if(this.getContentNodeStore()!=null){
 			this.getContentNodeStore().dispose();
