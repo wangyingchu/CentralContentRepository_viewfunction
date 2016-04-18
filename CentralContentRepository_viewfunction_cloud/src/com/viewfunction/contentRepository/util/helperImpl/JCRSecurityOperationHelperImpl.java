@@ -219,8 +219,8 @@ public class JCRSecurityOperationHelperImpl implements SecurityOperationHelper{
 				} 			
 				for(String groupPermissionCode:groupPermissionArray){		
 					//groupPermissionCode format DADEC:groupName	
-					String permissionCode=groupPermissionCode.substring(0,5);
-					String permissionGroup=groupPermissionCode.substring(6,groupPermissionCode.length());					
+					String permissionCode=groupPermissionCode.substring(0,7);
+					String permissionGroup=groupPermissionCode.substring(8,groupPermissionCode.length());					
 					PermissionObject groupPermission=ContentComponentFactory.createPermissionObject();
 					groupPermission.setPermissionParticipant(permissionGroup);
 					groupPermission.setPermissionScope(PermissionObject.PermissionScope_Group);
