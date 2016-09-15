@@ -819,7 +819,7 @@ public class TestNG_ContentObjectTestCase {
 			Assert.assertEquals(false, lo1.isTemporaryLock());
 			
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}	
@@ -870,7 +870,7 @@ public class TestNG_ContentObjectTestCase {
 			Assert.assertFalse(lo4_1.isTemporaryLock());	
 			
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}	
