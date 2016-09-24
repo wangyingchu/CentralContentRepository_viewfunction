@@ -48,6 +48,7 @@ import com.viewfunction.contentRepository.util.observationImpl.JCRDefaultContent
 			try {				
 				ContentSpace cs0=ContentComponentFactory.createContentSpace(TestCaseDataConstant.testContentSpaceName);				
 				Assert.assertNotNull(cs0);
+				cs0.closeContentSpace();
 				List<String> l=ContentComponentFactory.getRegisteredContentSpace();
 				Assert.assertEquals(l.size(),1,"contentspace number should be 1");
 				Assert.assertEquals(TestCaseDataConstant.testContentSpaceName,l.get(0));
@@ -55,6 +56,7 @@ import com.viewfunction.contentRepository.util.observationImpl.JCRDefaultContent
 				Assert.assertNull(cs1);
 				ContentSpace cs2=ContentComponentFactory.createContentSpace(TestCaseDataConstant.testContentSpaceName+"2");				
 				Assert.assertNotNull(cs2);
+				cs2.closeContentSpace();
 				List<String> l2=ContentComponentFactory.getRegisteredContentSpace();
 				Assert.assertEquals(2,l2.size(),"contentspace number should be 2");
 				//In jackrabbit OAK, last added property will returned first

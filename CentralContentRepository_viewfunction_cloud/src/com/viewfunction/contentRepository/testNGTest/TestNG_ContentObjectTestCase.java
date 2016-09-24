@@ -786,7 +786,8 @@ public class TestNG_ContentObjectTestCase {
 			BaseContentObject bco_o2=rco2.getSubContentObject("AddLinkTestCO1");	
 			Assert.assertNotNull(bco_o2);			
 			BaseContentObject bco_o3=bco3.getSubContentObject("linkedFromAddLinkTestCO1");
-			Assert.assertNull(bco_o3);			
+			Assert.assertNull(bco_o3);	
+			cs2.closeContentSpace();
 		} catch (ContentReposityException e) {			
 			e.printStackTrace();
 			cs.closeContentSpace();
@@ -816,7 +817,7 @@ public class TestNG_ContentObjectTestCase {
 			Assert.assertNotNull(lo1);			
 			
 			Assert.assertEquals(lo1.getLocker(), BUILDIN_ADMINISTRATOR_ACCOUNT);			
-			Assert.assertEquals(false, lo1.isTemporaryLock());
+			Assert.assertEquals(false, lo1.isTemporaryLock());			
 			
 			try {
 				Thread.sleep(3000);
@@ -950,7 +951,8 @@ public class TestNG_ContentObjectTestCase {
 			boolean aelr=bco2.addContentObjectEventListener(ContentSpaceEventListener.DEFAULT_CONTENTSPACE_EVENTLISTENER);		
 			Assert.assertTrue(aelr);	
 			boolean relr=bco2.removeContentObjectEventListener();
-			Assert.assertTrue(relr);		
+			Assert.assertTrue(relr);	
+			cs.closeContentSpace();
 		} catch (ContentReposityException e) {			
 			e.printStackTrace();
 			cs.closeContentSpace();	
