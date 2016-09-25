@@ -19,11 +19,13 @@ import javax.jcr.Workspace;
 
 import org.apache.jackrabbit.oak.Oak;
 import org.apache.jackrabbit.oak.jcr.Jcr;
+import org.apache.jackrabbit.oak.jcr.repository.RepositoryImpl;
 import org.apache.jackrabbit.oak.plugins.document.DocumentMK;
 import org.apache.jackrabbit.oak.plugins.document.DocumentNodeStore;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+
 import com.viewfunction.contentRepository.contentBureau.CommentObject;
 import com.viewfunction.contentRepository.contentBureau.ContentObject;
 import com.viewfunction.contentRepository.contentBureau.ContentObjectProperty;
@@ -267,11 +269,12 @@ public class ContentComponentFactory {
 		}
 		Session session=null;
 		DocumentNodeStore nodeStore=null;
+		Repository contentRepository =null;
 		try {
 			String metaDataContentSpace=JCRContentReposityConstant.METEDATA_CONTENTSPACE;
 			DB db = new MongoClient(MONGODB_SERVER_ADDRESS, MONGODB_SERVER_PORT_INTEGER).getDB(metaDataContentSpace);
 	        nodeStore = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
-	        Repository contentRepository  = new Jcr(new Oak(nodeStore)).createRepository();
+	        contentRepository  = new Jcr(new Oak(nodeStore)).createRepository();
 			
 			String BUILDIN_ADMINISTRATOR_ACCOUNT=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT);
 			String BUILDIN__ADMINISTRATOR_ACCOUNT_PWD=PerportyHandler.getPerportyValue(PerportyHandler.BUILDIN_ADMINISTRATOR_ACCOUNT_PWD);
@@ -313,6 +316,10 @@ public class ContentComponentFactory {
 		}finally{
 			if(session!=null){
 				session.logout();
+			}
+			if(contentRepository!=null){
+				RepositoryImpl repository=(RepositoryImpl)contentRepository;
+				repository.shutdown();
 			}
 			if(nodeStore!=null){
 				nodeStore.dispose();
