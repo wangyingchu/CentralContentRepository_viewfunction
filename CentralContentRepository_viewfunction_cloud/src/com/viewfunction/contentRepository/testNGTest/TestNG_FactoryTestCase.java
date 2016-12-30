@@ -58,9 +58,16 @@ import com.viewfunction.contentRepository.util.observationImpl.JCRDefaultContent
 				Assert.assertNotNull(cs2);
 				cs2.closeContentSpace();
 				List<String> l2=ContentComponentFactory.getRegisteredContentSpace();
-				Assert.assertEquals(2,l2.size(),"contentspace number should be 2");
-				//In jackrabbit OAK, last added property will returned first
-				Assert.assertEquals(TestCaseDataConstant.testContentSpaceName+"2",l2.get(0));				
+				Assert.assertEquals(2,l2.size(),"contentspace number should be 2");				
+				boolean isCorrentSpaceName=true;
+				for(String currentSpaceName:l2){
+					if(currentSpaceName.equals(TestCaseDataConstant.testContentSpaceName)||currentSpaceName.equals(TestCaseDataConstant.testContentSpaceName+"2")){
+						isCorrentSpaceName=isCorrentSpaceName&true;						
+					}else{
+						isCorrentSpaceName=isCorrentSpaceName&false;	
+					}							
+				}
+				Assert.assertTrue(isCorrentSpaceName,"Space Name should be "+TestCaseDataConstant.testContentSpaceName+" and "+TestCaseDataConstant.testContentSpaceName+"2");
 			} catch (ContentReposityException e) {			
 				e.printStackTrace();				
 				Assert.fail("got ContentReposityException during createContentSpace");

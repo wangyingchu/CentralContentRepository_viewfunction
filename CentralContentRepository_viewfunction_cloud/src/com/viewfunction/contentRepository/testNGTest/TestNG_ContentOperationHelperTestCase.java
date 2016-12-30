@@ -354,6 +354,9 @@ public class TestNG_ContentOperationHelperTestCase {
 			Assert.assertEquals(on, nn);
 			Assert.assertTrue(ol!=nl);			
 			Assert.assertTrue(!odesc.equals(ndesc));
+			//After download testing documents from git, all files LastModified date will be set to the same time when documents are download from git. So next assertTrue
+			//will fail. But in the real business usage the documents' LastModified date should be different. To make test pass, please use another different file replace
+			//IMG_1716.JPG's content. This operation only need once after loaded codes from git.
 			Assert.assertTrue(odate.getTimeInMillis()!=ndate.getTimeInMillis());			
 			cs.closeContentSpace();
 		} catch (ContentReposityException e) {
