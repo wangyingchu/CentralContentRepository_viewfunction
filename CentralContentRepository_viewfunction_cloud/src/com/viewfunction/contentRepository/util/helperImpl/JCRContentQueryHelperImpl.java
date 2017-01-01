@@ -26,7 +26,14 @@ public class JCRContentQueryHelperImpl implements ContentQueryHelper{
 		JCRContentObjectImpl jmpl=(JCRContentObjectImpl)contentObject;
 		try {			
 			String np=jmpl.getJcrNode().getPath();			
-			String sql = "SELECT * FROM [vfcr:resource] AS file WHERE ISDESCENDANTNODE(['"+np+"']) and contains(file.*,'"+contentValue.trim()+"')";
+			//String sql = "SELECT * FROM [vfcr:resource] AS file WHERE ISDESCENDANTNODE(['"+np+"']) and contains(file.*,'"+contentValue.trim()+"')";
+			
+			//String sql = "SELECT * FROM [vfcr:resource] AS folder WHERE ISDESCENDANTNODE(folder,["+np+"]) and contains(file.*,'"+contentValue.trim()+"')";
+			
+			//String sql = "SELECT * FROM [vfcr:resource] AS folder WHERE ISDESCENDANTNODE(folder,["+np+"]) and contains([jcr:mimeType], 'pdf')";
+			
+			String sql = "SELECT * FROM [vfcr:resource] AS folder WHERE ISDESCENDANTNODE(folder,["+np+"]) and contains(*, 'pdf')";
+			
 			return selectBinaryContentsBySQL2(contentObject,sql);			
 		} catch (RepositoryException e) {
 			ContentReposityDataException cpe=new ContentReposityDataException();
@@ -39,8 +46,8 @@ public class JCRContentQueryHelperImpl implements ContentQueryHelper{
 	public List<TextContent> selectTextContentsByEncoding(BaseContentObject contentObject, String encodingValue)throws ContentReposityException {
 		JCRContentObjectImpl jmpl=(JCRContentObjectImpl)contentObject;
 		try {			
-			String np=jmpl.getJcrNode().getPath();
-			String sql = "SELECT * FROM [vfcr:resource] where ISDESCENDANTNODE(['"+np+"']) and [jcr:encoding] LIKE '%"+encodingValue.trim()+"%'";	
+			String np=jmpl.getJcrNode().getPath();			
+			String sql = "SELECT * FROM [vfcr:resource] AS folder where ISDESCENDANTNODE(folder,["+np+"]) and [jcr:encoding] LIKE '%"+encodingValue.trim()+"%'";
 			return selectTextContentsBySQL2(contentObject,sql);					
 		} catch (RepositoryException e) {
 			ContentReposityDataException cpe=new ContentReposityDataException();
@@ -53,8 +60,8 @@ public class JCRContentQueryHelperImpl implements ContentQueryHelper{
 	public List<BinaryContent> selectBinaryContentsByMimeType(BaseContentObject contentObject, String mimeTypeValue)throws ContentReposityException {
 		JCRContentObjectImpl jmpl=(JCRContentObjectImpl)contentObject;
 		try {			
-			String np=jmpl.getJcrNode().getPath();			
-			String sql = "SELECT * FROM [vfcr:resource] where ISDESCENDANTNODE(['"+np+"']) and [jcr:mimeType] LIKE '%"+mimeTypeValue.trim()+"%'";	
+			String np=jmpl.getJcrNode().getPath();				
+			String sql = "SELECT * FROM [vfcr:resource] AS folder where ISDESCENDANTNODE(folder,["+np+"]) and [jcr:mimeType] LIKE '%"+mimeTypeValue.trim()+"%'";
 			return selectBinaryContentsBySQL2(contentObject,sql);			
 		} catch (RepositoryException e) {
 			ContentReposityDataException cpe=new ContentReposityDataException();
@@ -68,8 +75,8 @@ public class JCRContentQueryHelperImpl implements ContentQueryHelper{
 	public List<TextContent> selectTextContentsByMimeType(BaseContentObject contentObject, String mimeTypeValue)throws ContentReposityException {
 		JCRContentObjectImpl jmpl=(JCRContentObjectImpl)contentObject;
 		try {			
-			String np=jmpl.getJcrNode().getPath();				
-			String sql = "SELECT * FROM [vfcr:resource] where ISDESCENDANTNODE(['"+np+"']) and [jcr:mimeType] LIKE '%"+mimeTypeValue.trim()+"%' and [jcr:encoding] <>''";	
+			String np=jmpl.getJcrNode().getPath();			
+			String sql = "SELECT * FROM [vfcr:resource] AS folder where ISDESCENDANTNODE(folder,["+np+"]) and [jcr:mimeType] LIKE '%"+mimeTypeValue.trim()+"%' and [jcr:encoding] <>''";
 			return selectTextContentsBySQL2(contentObject,sql);			
 		} catch (RepositoryException e) {
 			ContentReposityDataException cpe=new ContentReposityDataException();
@@ -82,8 +89,8 @@ public class JCRContentQueryHelperImpl implements ContentQueryHelper{
 	public List<BinaryContent> selectBinaryContentsByTitle(BaseContentObject contentObject, String titleValue)throws ContentReposityException {
 		JCRContentObjectImpl jmpl=(JCRContentObjectImpl)contentObject;
 		try {			
-			String np=jmpl.getJcrNode().getPath();
-			String sql = "SELECT * FROM [vfcr:resource] where ISDESCENDANTNODE(['"+np+"']) and [vfcr:contentName] LIKE '%"+titleValue.trim()+"%'";				
+			String np=jmpl.getJcrNode().getPath();				
+			String sql = "SELECT * FROM [vfcr:resource] AS folder where ISDESCENDANTNODE(folder,["+np+"]) and [vfcr:contentName] LIKE '%"+titleValue.trim()+"%'";			
 			return selectBinaryContentsBySQL2(contentObject,sql);			
 		} catch (RepositoryException e) {
 			ContentReposityDataException cpe=new ContentReposityDataException();
@@ -96,8 +103,8 @@ public class JCRContentQueryHelperImpl implements ContentQueryHelper{
 	public List<TextContent> selectTextContentsByTitle(BaseContentObject contentObject, String titleValue)throws ContentReposityException {
 		JCRContentObjectImpl jmpl=(JCRContentObjectImpl)contentObject;
 		try {			
-			String np=jmpl.getJcrNode().getPath();			
-			String sql = "SELECT * FROM [vfcr:resource] where ISDESCENDANTNODE(['"+np+"']) and [vfcr:contentName] LIKE '%"+titleValue.trim()+"%' and [jcr:encoding] <>''";	
+			String np=jmpl.getJcrNode().getPath();
+			String sql = "SELECT * FROM [vfcr:resource] AS folder where ISDESCENDANTNODE(folder,["+np+"]) and [vfcr:contentName] LIKE '%"+titleValue.trim()+"%' and [jcr:encoding] <>''";
 			return selectTextContentsBySQL2(contentObject,sql);			
 		} catch (RepositoryException e) {
 			ContentReposityDataException cpe=new ContentReposityDataException();

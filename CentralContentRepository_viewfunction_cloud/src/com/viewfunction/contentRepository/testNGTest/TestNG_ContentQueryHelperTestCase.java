@@ -116,11 +116,13 @@ public class TestNG_ContentQueryHelperTestCase {
 			RootContentObject rco=cs.getRootContentObject(TestCaseDataConstant.ContentQueryHelperTestContentObject);		
 			BaseContentObject folderCo=rco.getSubContentObject("contentQueryFolder");
 			Assert.assertNotNull(folderCo);
-			List<BinaryContent> bcl=ContentComponentFactory.getContentQueryHelper().selectBinaryContentsByMimeType(folderCo,"jp");		
+			List<BinaryContent> bcl=ContentComponentFactory.getContentQueryHelper().selectBinaryContentsByMimeType(folderCo,"jp");				
+			Assert.assertTrue(bcl.size()>0);
 			for(BinaryContent bc:bcl){		
 				Assert.assertTrue(bc.getMimeType().contains("jp"));
 			}			
-			List<BinaryContent> bcl2=ContentComponentFactory.getContentQueryHelper().selectBinaryContentsByMimeType(folderCo,"msword");		
+			List<BinaryContent> bcl2=ContentComponentFactory.getContentQueryHelper().selectBinaryContentsByMimeType(folderCo,"msword");
+			Assert.assertTrue(bcl2.size()>0);
 			for(BinaryContent bc:bcl2){		
 				Assert.assertTrue(bc.getContentName().equals("CommonBase Event_SituationData_V20.doc"));
 			}			
@@ -140,9 +142,10 @@ public class TestNG_ContentQueryHelperTestCase {
 			RootContentObject rco=cs.getRootContentObject(TestCaseDataConstant.ContentQueryHelperTestContentObject);		
 			BaseContentObject folderCo=rco.getSubContentObject("contentQueryFolder");
 			Assert.assertNotNull(folderCo);
-			List<TextContent> bcl2=ContentComponentFactory.getContentQueryHelper().selectTextContentsByEncoding(folderCo,"G");				
+			List<TextContent> bcl2=ContentComponentFactory.getContentQueryHelper().selectTextContentsByEncoding(folderCo,"U");	
+			Assert.assertTrue(bcl2.size()>0);
 			for(TextContent bc:bcl2){	
-				Assert.assertTrue(bc.getEncoding().contains("G"));
+				Assert.assertTrue(bc.getEncoding().contains("U"));
 			}	
 			cs.closeContentSpace();		
 		} catch (ContentReposityException e1) {			
@@ -161,6 +164,7 @@ public class TestNG_ContentQueryHelperTestCase {
 			BaseContentObject folderCo=rco.getSubContentObject("contentQueryFolder");
 			Assert.assertNotNull(folderCo);
 			List<TextContent> bcl3=ContentComponentFactory.getContentQueryHelper().selectTextContentsByMimeType(folderCo,"a");
+			Assert.assertTrue(bcl3.size()>0);
 			for(TextContent bc:bcl3){
 				Assert.assertTrue(bc.getMimeType().contains("a"));
 			}
@@ -181,6 +185,7 @@ public class TestNG_ContentQueryHelperTestCase {
 			BaseContentObject folderCo=rco.getSubContentObject("contentQueryFolder");
 			Assert.assertNotNull(folderCo);
 			List<TextContent> bcl3=ContentComponentFactory.getContentQueryHelper().selectTextContentsByTitle(folderCo,"a");
+			Assert.assertTrue(bcl3.size()>0);
 			for(TextContent bc:bcl3){
 				Assert.assertTrue(bc.getContentName().contains("a"));
 			}
@@ -201,6 +206,7 @@ public class TestNG_ContentQueryHelperTestCase {
 			BaseContentObject folderCo=rco.getSubContentObject("contentQueryFolder");
 			Assert.assertNotNull(folderCo);
 			List<BinaryContent> bcl3=ContentComponentFactory.getContentQueryHelper().selectBinaryContentsByTitle(folderCo,"3");
+			Assert.assertTrue(bcl3.size()>0);
 			for(BinaryContent bc:bcl3){
 				Assert.assertTrue(bc.getContentName().contains("3"));
 			}
@@ -228,7 +234,7 @@ public class TestNG_ContentQueryHelperTestCase {
 			for(BinaryContent bc:bcl31){
 				Assert.assertTrue(bc.getContentName().equals("ScalaTutorial.pdf"));
 			}
-			List<BinaryContent> bcl32=ContentComponentFactory.getContentQueryHelper().selectBinaryContentsByFullTextSearch(folderCo,"ÐÂ¼¼Êõ¿ÉÊ¹ÃÀ¹úÈË¡°½ÚÔ¼¸ü¶àÊ±¼ä¡±");
+			List<BinaryContent> bcl32=ContentComponentFactory.getContentQueryHelper().selectBinaryContentsByFullTextSearch(folderCo,"ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½Ë¡ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä¡±");
 			for(BinaryContent bc:bcl32){
 				Assert.assertTrue(bc.getContentName().equals("ChineseContent.txt"));
 			}
