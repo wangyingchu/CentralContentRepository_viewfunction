@@ -22,6 +22,11 @@ import org.apache.jackrabbit.oak.jcr.Jcr;
 import org.apache.jackrabbit.oak.jcr.repository.RepositoryImpl;
 import org.apache.jackrabbit.oak.plugins.document.DocumentMK;
 import org.apache.jackrabbit.oak.plugins.document.DocumentNodeStore;
+import org.apache.jackrabbit.oak.plugins.index.lucene.LuceneIndexEditorProvider;
+import org.apache.jackrabbit.oak.plugins.index.lucene.LuceneIndexProvider;
+
+import org.apache.jackrabbit.oak.spi.commit.Observer;
+import org.apache.jackrabbit.oak.spi.query.QueryIndexProvider;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -47,6 +52,7 @@ import com.viewfunction.contentRepository.security.SecurityOperationConstant;
 import com.viewfunction.contentRepository.util.BatchLoadJCRContentObjectImpl;
 import com.viewfunction.contentRepository.util.BatchLoadJCRRootContentObjectImpl;
 import com.viewfunction.contentRepository.util.ContentReposityCustomNodesConfigUtil;
+import com.viewfunction.contentRepository.util.LuceneCompatModeInitializer;
 import com.viewfunction.contentRepository.util.PerportyHandler;
 import com.viewfunction.contentRepository.util.exception.ContentReposityDataException;
 import com.viewfunction.contentRepository.util.exception.ContentReposityException;
@@ -81,6 +87,7 @@ public class ContentComponentFactory {
 	private static String USER_AUTHENTICATION_METHOD;
 	private static String MONGODB_SERVER_ADDRESS;
 	private static int MONGODB_SERVER_PORT_INTEGER;
+	private static String ENABLE_GLOBAL_FULLTEXT_SEARCH;
 	
 	private static ContentSpace generateContentSpace(String contentSpaceName,Credentials loginCredentials)throws ContentReposityException{
 		if(MONGODB_SERVER_ADDRESS==null){
@@ -94,7 +101,24 @@ public class ContentComponentFactory {
 		try {
 			DB db = new MongoClient(MONGODB_SERVER_ADDRESS, MONGODB_SERVER_PORT_INTEGER).getDB(contentSpaceName);
 	        nodeStore = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
-	        Repository contentRepository = new Jcr(new Oak(nodeStore)).createRepository();
+	        
+	        Jcr targetJcr=new Jcr(new Oak(nodeStore));
+	        
+	        if(ENABLE_GLOBAL_FULLTEXT_SEARCH==null){
+	        	ENABLE_GLOBAL_FULLTEXT_SEARCH=PerportyHandler.getPerportyValue(PerportyHandler.ENABLE_GLOBAL_FULLTEXT_SEARCH);
+	        }
+	        boolean enableGlobalFullTextSearch=Boolean.parseBoolean(ENABLE_GLOBAL_FULLTEXT_SEARCH);
+	        if(enableGlobalFullTextSearch){
+	        	LuceneIndexProvider provider = new LuceneIndexProvider();
+	 	        targetJcr.with(
+	                     new LuceneCompatModeInitializer("luceneGlobal", null))
+	                     .with((QueryIndexProvider)provider)
+	                     .with((Observer) provider)
+	                     .withFastQueryResultSize(true)
+	                     .with(new LuceneIndexEditorProvider()); 
+	        } 
+	        
+	        Repository contentRepository = targetJcr.createRepository();
 			session=contentRepository.login(loginCredentials);
 			/*
 			if(JCR_OAK_REFRESHINTERVALZERO){
