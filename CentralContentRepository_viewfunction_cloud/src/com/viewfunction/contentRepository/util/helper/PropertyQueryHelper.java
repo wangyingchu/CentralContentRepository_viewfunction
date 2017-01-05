@@ -14,6 +14,8 @@ public interface PropertyQueryHelper {
 	public List<BaseContentObject> selectContentObjectsBySQL2(BaseContentObject contentObject,String sql2String) throws ContentReposityException;
 	public List<BaseContentObject> selectContentObjectsBySQL2(BaseContentObject contentObject,String selectorName,String queryString,String selectScopeScope) throws ContentReposityException;
 	public List<BaseContentObject> selectContentObjectsBySQL2(BaseContentObject contentObject,String selectorName,String queryString,String nodeType,String selectScopeScope) throws ContentReposityException;
+	
+	public List<BaseContentObject> selectContentObjectsByPropertyFullTextSearch(BaseContentObject selectStartContentObject,String propertyName,String fullTextSearchContent,String selectScopeScope) throws ContentReposityException;
 
 
 }

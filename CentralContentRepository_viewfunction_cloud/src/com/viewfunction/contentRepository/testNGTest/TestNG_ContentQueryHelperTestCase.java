@@ -111,7 +111,8 @@ public class TestNG_ContentQueryHelperTestCase {
 	}
 	
 	@Test	
-	public void testSelectBinaryContentsByMimeType(){ ContentSpace cs=null;
+	public void testSelectBinaryContentsByMimeType(){ 
+		ContentSpace cs=null;
 		try {
 			cs = ContentComponentFactory.connectContentSpace(TestCaseDataConstant.testContentSpaceName);
 			RootContentObject rco=cs.getRootContentObject(TestCaseDataConstant.ContentQueryHelperTestContentObject);		

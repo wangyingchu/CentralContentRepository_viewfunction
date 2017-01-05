@@ -42,11 +42,17 @@
     </classes>
   </test>
    
-    <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentQueryHelperTestCase">
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentQueryHelperTestCase">
     <classes>
       <class name="com.viewfunction.contentRepository.testNGTest.TestNG_ContentQueryHelperTestCase"/>
     </classes>
   </test>  
+  
+  <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_PropertyQueryHelperTestCasee">
+    <classes>
+      <class name="com.viewfunction.contentRepository.testNGTest.TestNG_PropertyQueryHelperTestCase"/>
+    </classes>
+  </test>     
  <!--
   <test verbose="2" name="com.viewfunction.contentRepository.testNGTest.TestNG_SecurityOperationHelperTestCase">
     <classes>

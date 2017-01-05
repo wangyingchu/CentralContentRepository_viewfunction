@@ -6,5 +6,6 @@ public class TestCaseDataConstant {
 	public static final String versionObjectTestContentObject="testNG_VersionObjectTestContentObject";
 	public static final String ContentOperationHelperTestContentObject="testNG_ContentOperationHelperTestContentObject";
 	public static final String ObjectCollectionHelperTestContentObject="testNG_ObjectCollectionHelperTestContentObject";
-	public static final String ContentQueryHelperTestContentObject="ContentQueryHelperTestContentObject";
+	public static final String ContentQueryHelperTestContentObject="testNG_ContentQueryHelperTestContentObject";
+	public static final String PropertyQueryHelperTestContentObject="testNG_PropertyQueryHelperTestContentObject";
 }
